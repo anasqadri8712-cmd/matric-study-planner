@@ -1,15 +1,15 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { BookOpen, CalendarRange, Home, LineChart, Settings, User } from "lucide-react";
+import { BookOpen, CalendarRange, Home, LineChart, ListTodo, User } from "lucide-react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 const NAV = [
   { to: "/home", label: "Home", icon: Home },
   { to: "/subjects", label: "Subjects", icon: BookOpen },
+  { to: "/tasks", label: "Tasks", icon: ListTodo },
   { to: "/planner", label: "Planner", icon: CalendarRange },
   { to: "/progress", label: "Progress", icon: LineChart },
   { to: "/profile", label: "Profile", icon: User },
-  { to: "/settings", label: "Settings", icon: Settings },
 ] as const;
 
 export function AppShell({ children }: { children: ReactNode }) {
