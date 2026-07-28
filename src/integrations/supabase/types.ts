@@ -14,7 +14,261 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      exams: {
+        Row: {
+          created_at: string
+          exam_date: string
+          id: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          exam_date: string
+          id?: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          exam_date?: string
+          id?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      notes: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          subject: string | null
+          summary: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content?: string
+          created_at?: string
+          id?: string
+          subject?: string | null
+          summary?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          subject?: string | null
+          summary?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          board: string
+          created_at: string
+          daily_hours: number
+          full_name: string
+          id: string
+          onboarded: boolean
+          strong_subjects: string[]
+          student_class: string
+          study_goal: string
+          theme: string
+          updated_at: string
+          weak_subjects: string[]
+        }
+        Insert: {
+          board?: string
+          created_at?: string
+          daily_hours?: number
+          full_name?: string
+          id: string
+          onboarded?: boolean
+          strong_subjects?: string[]
+          student_class?: string
+          study_goal?: string
+          theme?: string
+          updated_at?: string
+          weak_subjects?: string[]
+        }
+        Update: {
+          board?: string
+          created_at?: string
+          daily_hours?: number
+          full_name?: string
+          id?: string
+          onboarded?: boolean
+          strong_subjects?: string[]
+          student_class?: string
+          study_goal?: string
+          theme?: string
+          updated_at?: string
+          weak_subjects?: string[]
+        }
+        Relationships: []
+      }
+      quizzes: {
+        Row: {
+          created_at: string
+          id: string
+          questions: Json
+          score: number | null
+          subject: string
+          topic: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          questions: Json
+          score?: number | null
+          subject: string
+          topic: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          questions?: Json
+          score?: number | null
+          subject?: string
+          topic?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      study_plans: {
+        Row: {
+          created_at: string
+          id: string
+          plan: Json
+          title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          plan: Json
+          title?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          plan?: Json
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      study_sessions: {
+        Row: {
+          created_at: string
+          id: string
+          minutes: number
+          session_date: string
+          subject: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          minutes?: number
+          session_date?: string
+          subject: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          minutes?: number
+          session_date?: string
+          subject?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      subjects: {
+        Row: {
+          color: string
+          completed_chapters: number
+          created_at: string
+          id: string
+          name: string
+          total_chapters: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          color?: string
+          completed_chapters?: number
+          created_at?: string
+          id?: string
+          name: string
+          total_chapters?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          color?: string
+          completed_chapters?: number
+          created_at?: string
+          id?: string
+          name?: string
+          total_chapters?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      tasks: {
+        Row: {
+          completed: boolean
+          created_at: string
+          due_date: string | null
+          id: string
+          kind: string
+          priority: string
+          subject: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed?: boolean
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          kind?: string
+          priority?: string
+          subject?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed?: boolean
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          kind?: string
+          priority?: string
+          subject?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
