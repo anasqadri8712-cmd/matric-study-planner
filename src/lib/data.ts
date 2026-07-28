@@ -104,7 +104,26 @@ export function useQuizzes(userId?: string) {
   });
 }
 
-type TableName = "subjects" | "tasks" | "notes" | "exams" | "study_plans" | "study_sessions" | "quizzes";
+export function useTaskHistory(userId?: string) {
+  return useQuery({
+    queryKey: ["task_history", userId],
+    enabled: !!userId,
+    queryFn: async () =>
+      unwrap(
+        await supabase.from("task_history").select("*").order("completed_at", { ascending: false }),
+      ) as Tables<"task_history">[],
+  });
+}
+
+type TableName =
+  | "subjects"
+  | "tasks"
+  | "notes"
+  | "exams"
+  | "study_plans"
+  | "study_sessions"
+  | "quizzes"
+  | "task_history";
 
 export function useInsert(table: TableName, key: string) {
   const qc = useQueryClient();

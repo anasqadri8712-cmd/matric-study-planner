@@ -91,3 +91,22 @@ export function Loader({ label = "Loading" }: { label?: string }) {
     </div>
   );
 }
+
+export function CountBadge({ count, className }: { count: number; className?: string }) {
+  if (!count) return null;
+  return (
+    <span
+      aria-label={`${count} pending`}
+      className={cn(
+        "inline-flex min-w-[20px] items-center justify-center rounded-full bg-destructive px-1.5 py-0.5 text-[11px] font-bold leading-none text-destructive-foreground shadow-sm",
+        className,
+      )}
+    >
+      {count > 99 ? "99+" : count}
+    </span>
+  );
+}
+
+export function SkeletonCard() {
+  return <div className="surface-card h-24 animate-pulse bg-muted/40" />;
+}
