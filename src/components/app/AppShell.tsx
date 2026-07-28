@@ -20,9 +20,9 @@ export function AppShell({ children }: { children: ReactNode }) {
       <div className="mx-auto w-full max-w-lg px-5 pt-6 pb-28">{children}</div>
 
       <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/85 backdrop-blur-xl">
-        <ul className="mx-auto grid max-w-lg grid-cols-6 px-1 py-2">
+        <ul className="mx-auto grid max-w-lg grid-cols-5 px-1 py-2">
           {NAV.map(({ to, label, icon: Icon }) => {
-            const active = pathname === to;
+            const active = pathname === to || pathname.startsWith(`${to}/`);
             return (
               <li key={to}>
                 <Link
