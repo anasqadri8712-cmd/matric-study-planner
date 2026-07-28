@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { FileText, Plus, Sparkles, Trash2 } from "lucide-react";
+import { FileText, Pin, Plus, Search, Sparkles, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell, EmptyState, PageHeader } from "@/components/app/AppShell";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { useSession } from "@/lib/session";
 import { useInsert, useNotes, useRemove, useUpdate } from "@/lib/data";
 import { summarizeNote } from "@/lib/ai.functions";
+import { NOTE_LABELS } from "@/lib/matric";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/notes")({
   head: () => ({
@@ -34,14 +36,25 @@ function NotesPage() {
   const summarize = useServerFn(summarizeNote);
 
   const [title, setTitle] = useState("");
+  const [topic, setTopic] = useState("");
+  const [label, setLabel] = useState<string>("none");
+  const [query, setQuery] = useState("");
   const [content, setContent] = useState("");
   const [open, setOpen] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
 
   async function create() {
     if (!title.trim()) return toast.error("Give your note a title.");
-    await add.mutateAsync({ user_id: user!.id, title: title.trim(), content });
+    await add.mutateAsync({
+      user_id: user!.id,
+      title: title.trim(),
+      topic: topic.trim() || null,
+      label,
+      content,
+    });
     setTitle("");
+    setTopic("");
+    setLabel("none");
     setContent("");
     setOpen(false);
     toast.success("Note saved.");
@@ -60,6 +73,14 @@ function NotesPage() {
       setBusyId(null);
     }
   }
+
+  const visible = notes
+    .filter((n) => {
+      const q = query.trim().toLowerCase();
+      if (!q) return true;
+      return `${n.title} ${n.topic ?? ""} ${n.content}`.toLowerCase().includes(q);
+    })
+    .sort((a, b) => Number(b.pinned) - Number(a.pinned));
 
   return (
     <AppShell>
@@ -97,6 +118,34 @@ function NotesPage() {
                     className="rounded-2xl"
                   />
                 </div>
+                <div className="space-y-2">
+                  <Label>Topic</Label>
+                  <Input
+                    value={topic}
+                    onChange={(e) => setTopic(e.target.value)}
+                    placeholder="Newton's laws"
+                    className="h-12 rounded-xl"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Label</Label>
+                  <div className="flex flex-wrap gap-2">
+                    {NOTE_LABELS.map((l) => (
+                      <button
+                        key={l.value}
+                        onClick={() => setLabel(l.value)}
+                        className={cn(
+                          "press rounded-xl border px-3 py-2 text-xs font-medium",
+                          label === l.value
+                            ? "border-primary bg-primary/12 text-primary"
+                            : "border-border text-muted-foreground",
+                        )}
+                      >
+                        {l.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
                 <Button onClick={create} className="h-12 w-full rounded-2xl">
                   Save note
                 </Button>
@@ -106,18 +155,38 @@ function NotesPage() {
         }
       />
 
-      {notes.length === 0 ? (
+      <div className="relative mb-4">
+        <Search className="absolute top-1/2 left-4 size-4 -translate-y-1/2 text-muted-foreground" />
+        <Input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search notes"
+          className="h-12 rounded-2xl pl-11"
+        />
+      </div>
+
+      {visible.length === 0 ? (
         <EmptyState
           icon={<FileText className="size-5" />}
-          title="No notes yet"
+          title={notes.length ? "No matching notes" : "No notes yet"}
           description="Save chapter notes and let AI turn them into short revision points."
         />
       ) : (
         <div className="space-y-3">
-          {notes.map((n) => (
+          {visible.map((n) => (
             <article key={n.id} className="surface-card animate-rise p-4">
               <div className="flex items-start gap-3">
-                <h2 className="flex-1 font-semibold">{n.title}</h2>
+                <div className="flex-1">
+                  <h2 className="font-semibold">{n.title}</h2>
+                  {n.topic ? <p className="text-xs text-muted-foreground">{n.topic}</p> : null}
+                </div>
+                <button
+                  onClick={() => update.mutate({ id: n.id, patch: { pinned: !n.pinned } })}
+                  aria-label={n.pinned ? `Unpin ${n.title}` : `Pin ${n.title}`}
+                  className={cn("press", n.pinned ? "text-primary" : "text-muted-foreground")}
+                >
+                  <Pin className="size-4" />
+                </button>
                 <button
                   onClick={() => remove.mutate(n.id)}
                   aria-label={`Delete ${n.title}`}
@@ -126,6 +195,11 @@ function NotesPage() {
                   <Trash2 className="size-4" />
                 </button>
               </div>
+              {n.label && n.label !== "none" ? (
+                <span className="mt-2 inline-block rounded-full bg-primary/12 px-2.5 py-1 text-[11px] font-medium text-primary">
+                  {NOTE_LABELS.find((l) => l.value === n.label)?.label ?? n.label}
+                </span>
+              ) : null}
               <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">{n.content || "Empty note"}</p>
               {n.summary ? (
                 <div className="mt-3 rounded-2xl bg-primary/8 p-3 text-sm whitespace-pre-wrap text-foreground">

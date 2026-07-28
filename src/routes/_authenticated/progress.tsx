@@ -9,7 +9,8 @@ import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { useSession } from "@/lib/session";
-import { useInsert, useQuizzes, useSessions, useSubjects } from "@/lib/data";
+import { useInsert, useQuizzes, useSessions, useSubjects, useTaskHistory } from "@/lib/data";
+import { formatDuration } from "@/lib/matric";
 
 export const Route = createFileRoute("/_authenticated/progress")({
   head: () => ({
@@ -28,6 +29,7 @@ function ProgressPage() {
   const { data: sessions = [] } = useSessions(user?.id);
   const { data: subjects = [] } = useSubjects(user?.id);
   const { data: quizzes = [] } = useQuizzes(user?.id);
+  const { data: history = [] } = useTaskHistory(user?.id);
   const log = useInsert("study_sessions", "sessions");
 
   const [subject, setSubject] = useState("");
@@ -144,6 +146,40 @@ function ProgressPage() {
           <p className="text-xs text-muted-foreground">Average quiz score</p>
           <p className="mt-1 text-2xl font-semibold">{avgQuiz}%</p>
         </div>
+      </section>
+
+      <section className="animate-rise mt-6">
+        <h2 className="mb-3 text-sm font-semibold text-muted-foreground">Completed tasks</h2>
+        {history.length === 0 ? (
+          <EmptyState
+            icon={<TrendingUp className="size-5" />}
+            title="No completed tasks yet"
+            description="Finish a task and pass its quiz verification to build your history."
+          />
+        ) : (
+          <div className="space-y-2">
+            {history.slice(0, 8).map((h) => (
+              <div key={h.id} className="surface-card p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <p className="flex-1 text-sm font-medium">{h.title}</p>
+                  <span className="rounded-full bg-success/15 px-3 py-1 text-xs font-semibold text-success">
+                    {h.quiz_score ?? 0}%
+                  </span>
+                </div>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {new Date(h.completed_at).toLocaleString(undefined, {
+                    day: "numeric",
+                    month: "short",
+                    hour: "numeric",
+                    minute: "2-digit",
+                  })}
+                  {" · "}
+                  {formatDuration(h.study_minutes ?? 0)} studied
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
       </section>
 
       <section className="animate-rise mt-6">

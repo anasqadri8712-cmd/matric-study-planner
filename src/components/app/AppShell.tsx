@@ -1,15 +1,15 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { BookOpen, CalendarRange, Home, LineChart, Settings, User } from "lucide-react";
+import { BookOpen, CalendarRange, Home, LineChart, ListTodo, User } from "lucide-react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 const NAV = [
   { to: "/home", label: "Home", icon: Home },
   { to: "/subjects", label: "Subjects", icon: BookOpen },
+  { to: "/tasks", label: "Tasks", icon: ListTodo },
   { to: "/planner", label: "Planner", icon: CalendarRange },
   { to: "/progress", label: "Progress", icon: LineChart },
   { to: "/profile", label: "Profile", icon: User },
-  { to: "/settings", label: "Settings", icon: Settings },
 ] as const;
 
 export function AppShell({ children }: { children: ReactNode }) {
@@ -22,7 +22,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/85 backdrop-blur-xl">
         <ul className="mx-auto grid max-w-lg grid-cols-6 px-1 py-2">
           {NAV.map(({ to, label, icon: Icon }) => {
-            const active = pathname === to;
+            const active = pathname === to || pathname.startsWith(`${to}/`);
             return (
               <li key={to}>
                 <Link
@@ -90,4 +90,23 @@ export function Loader({ label = "Loading" }: { label?: string }) {
       {label}...
     </div>
   );
+}
+
+export function CountBadge({ count, className }: { count: number; className?: string }) {
+  if (!count) return null;
+  return (
+    <span
+      aria-label={`${count} pending`}
+      className={cn(
+        "inline-flex min-w-[20px] items-center justify-center rounded-full bg-destructive px-1.5 py-0.5 text-[11px] font-bold leading-none text-destructive-foreground shadow-sm",
+        className,
+      )}
+    >
+      {count > 99 ? "99+" : count}
+    </span>
+  );
+}
+
+export function SkeletonCard() {
+  return <div className="surface-card h-24 animate-pulse bg-muted/40" />;
 }
