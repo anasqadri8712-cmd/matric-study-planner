@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import type { Tables, TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
+import type { Tables, TablesUpdate } from "@/integrations/supabase/types";
 
 export type Profile = Tables<"profiles">;
 export type Subject = Tables<"subjects">;
@@ -106,11 +106,24 @@ export function useQuizzes(userId?: string) {
 
 type TableName = "subjects" | "tasks" | "notes" | "exams" | "study_plans" | "study_sessions" | "quizzes";
 
-export function useInsert<T extends TableName>(table: T, key: string) {
+export function useInsert(table: TableName, key: string) {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (row: TablesInsert<T>) =>
-      unwrap(await (supabase.from(table) as never as { insert: (r: unknown) => never }).insert(row) as never),
+    mutationFn: async (row: Record<string, unknown>) => {
+      const { error } = await supabase.from(table).insert(row as never);
+      if (error) throw new Error(error.message);
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: [key] }),
+  });
+}
+
+export function useUpdate(table: TableName, key: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, patch }: { id: string; patch: Record<string, unknown> }) => {
+      const { error } = await supabase.from(table).update(patch as never).eq("id", id);
+      if (error) throw new Error(error.message);
+    },
     onSuccess: () => qc.invalidateQueries({ queryKey: [key] }),
   });
 }
