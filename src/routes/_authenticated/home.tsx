@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
   BookOpen,
@@ -47,7 +47,6 @@ type Card = {
 
 function Home() {
   const { user } = useSession();
-  const navigate = useNavigate();
   const { data: profile, isLoading } = useProfile(user?.id);
   const { data: tasks = [] } = useTasks(user?.id);
   const { data: subjects = [] } = useSubjects(user?.id);

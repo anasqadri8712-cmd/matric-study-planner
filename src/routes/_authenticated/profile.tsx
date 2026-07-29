@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Save, UserRound } from "lucide-react";
+import { Check, Save, UserRound } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell, PageHeader } from "@/components/app/AppShell";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,9 @@ import { cn } from "@/lib/utils";
 import { useSession } from "@/lib/session";
 import { useProfile, useUpdateProfile } from "@/lib/data";
 import { validateName } from "@/lib/validation";
+import { MATRIC_SUBJECTS } from "@/lib/matric";
+
+const STUDY_TIMES = ["Morning", "Afternoon", "Evening", "Night"];
 
 export const Route = createFileRoute("/_authenticated/profile")({
   head: () => ({
@@ -34,6 +37,9 @@ function ProfilePage() {
   const [board, setBoard] = useState("Punjab Board");
   const [goal, setGoal] = useState("");
   const [hours, setHours] = useState([3]);
+  const [weak, setWeak] = useState<string[]>([]);
+  const [strong, setStrong] = useState<string[]>([]);
+  const [studyTime, setStudyTime] = useState("Evening");
 
   useEffect(() => {
     if (!profile) return;
@@ -42,7 +48,18 @@ function ProfilePage() {
     setBoard(profile.board);
     setGoal(profile.study_goal);
     setHours([Number(profile.daily_hours)]);
+    setWeak(profile.weak_subjects ?? []);
+    setStrong(profile.strong_subjects ?? []);
+    setStudyTime(profile.preferred_study_time ?? "Evening");
   }, [profile]);
+
+  function toggle(list: string[], set: (v: string[]) => void, other: string[], setOther: (v: string[]) => void, value: string) {
+    if (list.includes(value)) set(list.filter((v) => v !== value));
+    else {
+      set([...list, value]);
+      setOther(other.filter((v) => v !== value));
+    }
+  }
 
   async function save() {
     const nameError = validateName(fullName);
@@ -53,6 +70,9 @@ function ProfilePage() {
       board,
       study_goal: goal,
       daily_hours: hours[0],
+      weak_subjects: weak,
+      strong_subjects: strong,
+      preferred_study_time: studyTime,
     });
     toast.success("Profile updated.");
   }
