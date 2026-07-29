@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
   BookOpen,
@@ -47,7 +47,6 @@ type Card = {
 
 function Home() {
   const { user } = useSession();
-  const navigate = useNavigate();
   const { data: profile, isLoading } = useProfile(user?.id);
   const { data: tasks = [] } = useTasks(user?.id);
   const { data: subjects = [] } = useSubjects(user?.id);
@@ -56,17 +55,17 @@ function Home() {
 
   const [now, setNow] = useState(() => new Date());
   useEffect(() => {
-    const id = setInterval(() => setNow(new Date()), 30_000);
+    const id = setInterval(() => setNow(new Date()), 1_000);
     return () => clearInterval(id);
   }, []);
 
-  useEffect(() => {
-    if (!isLoading && profile && !profile.onboarded) navigate({ to: "/onboarding" });
-  }, [isLoading, profile, navigate]);
-
   const greeting = getGreeting(now);
   const today = formatToday(now);
-  const clock = now.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+  const clock = now.toLocaleTimeString(undefined, {
+    hour: "numeric",
+    minute: "2-digit",
+    second: "2-digit",
+  });
 
   const pending = tasks.filter((t) => t.status !== "completed");
   const homework = pending.filter((t) => t.kind === "homework");
@@ -107,13 +106,21 @@ function Home() {
 
   return (
     <AppShell>
-      <header className="animate-rise mb-6">
-        <p className="text-sm text-muted-foreground">
-          {today.day} · {today.date} · {clock}
-        </p>
-        <h1 className="mt-1 text-2xl font-semibold leading-tight">
-          {greeting.text}, {firstName} {greeting.emoji}
-        </h1>
+      <header className="animate-rise surface-card mb-5 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 p-5">
+        <div className="min-w-0">
+          <h1 className="truncate text-2xl font-bold leading-tight">AI Study Planner</h1>
+          <p className="mt-1.5 text-xs font-medium text-muted-foreground">
+            {greeting.text} {greeting.emoji}
+          </p>
+          <p className="mt-0.5 truncate text-base font-semibold">Hi, {firstName}</p>
+          <p className="mt-2 text-xs text-muted-foreground">
+            {today.day} · {today.date}
+          </p>
+          <p className="text-xs font-semibold tabular-nums text-primary">{clock}</p>
+        </div>
+        <span className="gradient-primary flex size-11 shrink-0 items-center justify-center rounded-2xl text-primary-foreground">
+          <Sparkles className="size-5" />
+        </span>
       </header>
 
       {isLoading ? (

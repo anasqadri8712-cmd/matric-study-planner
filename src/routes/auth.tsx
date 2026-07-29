@@ -112,7 +112,7 @@ function AuthPage() {
       return;
     }
     toast.success("🎉 Your account has been created successfully.");
-    navigate({ to: "/onboarding", replace: true });
+    navigate({ to: "/home", replace: true });
   }
 
   async function handleForgot() {

@@ -33,51 +33,51 @@ function Welcome() {
   }, [loading, session, navigate]);
 
   return (
-    <main className="min-h-screen bg-background">
-      <div className="mx-auto flex min-h-screen w-full max-w-lg flex-col px-6 py-10">
-        <div className="animate-rise flex items-center gap-2">
-          <span className="gradient-primary flex size-9 items-center justify-center rounded-xl text-primary-foreground">
-            <BrainCircuit className="size-5" />
+    <main className="h-[100dvh] overflow-hidden bg-background">
+      <div className="mx-auto flex h-full w-full max-w-lg flex-col px-6 py-[max(1rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))]">
+        <div className="animate-rise flex shrink-0 items-center gap-2">
+          <span className="gradient-primary flex size-8 items-center justify-center rounded-xl text-primary-foreground">
+            <BrainCircuit className="size-4" />
           </span>
           <span className="font-display text-sm font-semibold tracking-tight">AI Study Planner</span>
         </div>
 
-        <div className="animate-rise mt-8 overflow-hidden rounded-3xl border border-border">
+        <div className="animate-rise mx-auto mt-3 w-full max-w-[220px] shrink overflow-hidden rounded-3xl border border-border">
           <img
             src={heroImage}
             alt="Student studying with an AI assistant organising their timetable"
             width={1024}
             height={1024}
-            className="w-full object-cover"
+            className="aspect-square w-full object-cover"
           />
         </div>
 
-        <div className="animate-rise mt-8 flex-1">
-          <h1 className="text-3xl leading-tight font-semibold">
+        <div className="animate-rise mt-4 min-h-0 flex-1">
+          <h1 className="text-[clamp(1.35rem,6vw,1.9rem)] font-semibold leading-tight">
             Study smarter for <span className="text-gradient">matric</span>, not longer.
           </h1>
-          <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-            Your personal AI coach builds the timetable, answers your doubts, quizzes you and keeps every
-            chapter on track — built for Class 9 & 10.
+          <p className="mt-2 text-[13px] leading-snug text-muted-foreground">
+            Your AI coach builds the timetable, answers doubts and keeps every chapter on track — for
+            Class 9 &amp; 10.
           </p>
 
-          <ul className="mt-6 space-y-3">
+          <ul className="mt-3 space-y-2">
             {[
               { icon: CalendarCheck, text: "Weekly plans made around your free hours" },
-              { icon: Sparkles, text: "Instant doubt solving, quizzes and note summaries" },
+              { icon: Sparkles, text: "Doubt solving, quizzes and note summaries" },
             ].map(({ icon: Icon, text }) => (
-              <li key={text} className="surface-card flex items-center gap-3 p-4">
-                <span className="flex size-9 items-center justify-center rounded-xl bg-primary/12 text-primary">
+              <li key={text} className="surface-card flex items-center gap-3 px-3 py-2.5">
+                <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-primary/12 text-primary">
                   <Icon className="size-4" />
                 </span>
-                <span className="text-sm">{text}</span>
+                <span className="text-[13px] leading-snug">{text}</span>
               </li>
             ))}
           </ul>
         </div>
 
-        <div className="animate-rise mt-8 space-y-3">
-          <Button asChild className="press h-13 w-full rounded-2xl text-base">
+        <div className="animate-rise mt-3 shrink-0 space-y-2">
+          <Button asChild className="press h-12 w-full rounded-2xl text-base">
             <Link to="/auth">
               Get Started <ArrowRight className="ml-1 size-4" />
             </Link>
