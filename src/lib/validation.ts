@@ -1,9 +1,9 @@
-const EMAIL_RE = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}$/;
+const GMAIL_RE = /^[A-Za-z0-9._%+-]+@gmail\.com$/;
 
 export function validateEmail(value: string): string | null {
-  const email = value.trim();
+  const email = value.trim().toLowerCase();
   if (!email) return "Please enter your email.";
-  if (!EMAIL_RE.test(email)) return "Please enter a valid email.";
+  if (!GMAIL_RE.test(email)) return "Please enter a valid Gmail address.";
   return null;
 }
 

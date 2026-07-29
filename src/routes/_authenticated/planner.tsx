@@ -11,7 +11,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { useSession } from "@/lib/session";
-import { useInsert, usePlans, useProfile, useRemove, useSubjects, useTasks, useUpdate } from "@/lib/data";
+import {
+  useExams,
+  useInsert,
+  usePlans,
+  useProfile,
+  useQuizzes,
+  useRemove,
+  useSubjects,
+  useTasks,
+  useUpdate,
+} from "@/lib/data";
 import { generateStudyPlan, type GeneratedPlan } from "@/lib/ai.functions";
 
 export const Route = createFileRoute("/_authenticated/planner")({
@@ -32,6 +42,8 @@ function Planner() {
   const { data: subjects = [] } = useSubjects(user?.id);
   const { data: tasks = [] } = useTasks(user?.id);
   const { data: plans = [] } = usePlans(user?.id);
+  const { data: exams = [] } = useExams(user?.id);
+  const { data: quizzes = [] } = useQuizzes(user?.id);
   const addTask = useInsert("tasks", "tasks");
   const updateTask = useUpdate("tasks", "tasks");
   const removeTask = useRemove("tasks", "tasks");
@@ -65,6 +77,25 @@ function Planner() {
   async function makePlan() {
     setBusy(true);
     try {
+      const pendingTasks = tasks
+        .filter((t) => !t.completed)
+        .slice(0, 12)
+        .map((t) => [t.subject, t.title, t.due_date ? `due ${t.due_date}` : null].filter(Boolean).join(" - "));
+      const quizPerformance = quizzes
+        .filter((q) => typeof q.score === "number")
+        .slice(0, 10)
+        .map((q) => ({ subject: q.subject, score: Number(q.score) }));
+      const examNote = exams.length
+        ? `Upcoming exams (days left): ${exams
+            .map(
+              (e) =>
+                `${e.subject || e.title} in ${Math.max(
+                  0,
+                  Math.ceil((new Date(e.exam_date).getTime() - Date.now()) / 86400000),
+                )} days`,
+            )
+            .join(", ")}`
+        : "";
       const result = await generate({
         data: {
           studentClass: profile?.student_class ?? "Class 9",
@@ -74,6 +105,13 @@ function Planner() {
           weak: profile?.weak_subjects ?? [],
           strong: profile?.strong_subjects ?? [],
           subjects: subjects.map((s) => s.name),
+          examNote,
+          pendingTasks,
+          quizPerformance,
+          previousPlan: latestPlan
+            ? JSON.stringify(latestPlan.days ?? []).slice(0, 2000)
+            : undefined,
+          variation: Math.floor(Math.random() * 1000000),
         },
       });
       await savePlan.mutateAsync({ user_id: user!.id, plan: result });

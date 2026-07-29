@@ -11,6 +11,10 @@ const PlanInput = z.object({
   strong: z.array(z.string()),
   subjects: z.array(z.string()),
   examNote: z.string().optional(),
+  pendingTasks: z.array(z.string()).optional(),
+  quizPerformance: z.array(z.object({ subject: z.string(), score: z.number() })).optional(),
+  previousPlan: z.string().optional(),
+  variation: z.number().optional(),
 });
 
 export type PlanBlock = { time: string; subject: string; topic: string; minutes: number };
@@ -39,11 +43,25 @@ Daily study hours available: ${data.dailyHours}
 Weak subjects (give more time): ${data.weak.join(", ") || "none given"}
 Strong subjects (revision only): ${data.strong.join(", ") || "none given"}
 Subjects being studied: ${data.subjects.join(", ") || "standard matric subjects"}
+Pending tasks to schedule first: ${data.pendingTasks?.join(" | ") || "none"}
+Recent quiz performance: ${
+            data.quizPerformance?.length
+              ? data.quizPerformance.map((q) => `${q.subject}: ${q.score}%`).join(", ")
+              : "no quizzes yet"
+          }
+Randomisation seed (use it to shuffle day order, block order and timings): ${data.variation ?? Math.floor(Math.random() * 100000)}
+${data.previousPlan ? `Previous plan the student already used (DO NOT repeat it):\n${data.previousPlan}` : ""}
 ${data.examNote ?? ""}
 
 Return JSON shaped exactly like:
 {"summary":"one motivating sentence","days":[{"day":"Monday","blocks":[{"time":"5:00 PM","subject":"Physics","topic":"Ch 3 - Dynamics numericals","minutes":45}]}],"tips":["short actionable tip"]}
-Rules: exactly 7 days starting Monday, total minutes per day must be close to ${Math.round(data.dailyHours * 60)}, 2-4 blocks per day, include one revision block, 3 tips maximum.`,
+Rules:
+- Exactly 7 days starting Monday, 2-4 blocks per day, total minutes per day close to ${Math.round(data.dailyHours * 60)}.
+- NEVER split time equally between subjects. Weight time by need: weak subjects and subjects with low quiz scores get roughly 2x the time of average subjects; strong subjects and high-scoring subjects get short revision blocks only.
+- Subjects with a near exam countdown get priority in the earliest days.
+- Schedule pending tasks explicitly as block topics where they fit.
+- This must be a NEW plan: change the subject order, block times and durations compared with any previous plan, while still respecting the weak/strong weighting.
+- Maximum 3 tips.`,
         },
       ],
       true,
