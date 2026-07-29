@@ -141,6 +141,49 @@ function ProfilePage() {
           <Slider value={hours} onValueChange={setHours} min={1} max={10} step={1} />
         </div>
 
+        <div className="space-y-2">
+          <Label>Preferred study time</Label>
+          <div className="grid grid-cols-2 gap-2">
+            {STUDY_TIMES.map((t) => (
+              <Pick key={t} active={studyTime === t} onClick={() => setStudyTime(t)}>
+                {t}
+              </Pick>
+            ))}
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label>Weak subjects</Label>
+          <p className="text-xs text-muted-foreground">The AI gives these extra revision time.</p>
+          <div className="flex flex-wrap gap-2">
+            {MATRIC_SUBJECTS.map((s) => (
+              <Tag
+                key={s.name}
+                active={weak.includes(s.name)}
+                onClick={() => toggle(weak, setWeak, strong, setStrong, s.name)}
+              >
+                {s.icon} {s.name}
+              </Tag>
+            ))}
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label>Strong subjects</Label>
+          <p className="text-xs text-muted-foreground">These get shorter, lighter sessions.</p>
+          <div className="flex flex-wrap gap-2">
+            {MATRIC_SUBJECTS.map((s) => (
+              <Tag
+                key={s.name}
+                active={strong.includes(s.name)}
+                onClick={() => toggle(strong, setStrong, weak, setWeak, s.name)}
+              >
+                {s.icon} {s.name}
+              </Tag>
+            ))}
+          </div>
+        </div>
+
         <Button onClick={save} disabled={update.isPending} className="press h-13 w-full rounded-2xl">
           <Save className="mr-1 size-4" />
           {update.isPending ? "Saving..." : "Save changes"}
@@ -168,6 +211,30 @@ function Pick({
         active ? "border-primary bg-primary/12 text-primary" : "border-border text-muted-foreground",
       )}
     >
+      {children}
+    </button>
+  );
+}
+
+function Tag({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "press inline-flex items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-medium",
+        active ? "border-primary bg-primary/12 text-primary" : "border-border text-muted-foreground",
+      )}
+    >
+      {active ? <Check className="size-3.5" /> : null}
       {children}
     </button>
   );
