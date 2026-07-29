@@ -96,6 +96,7 @@ export type Database = {
           id: string
           language: string
           onboarded: boolean
+          preferred_study_time: string
           reminders: Json
           strong_subjects: string[]
           student_class: string
@@ -113,6 +114,7 @@ export type Database = {
           id: string
           language?: string
           onboarded?: boolean
+          preferred_study_time?: string
           reminders?: Json
           strong_subjects?: string[]
           student_class?: string
@@ -130,6 +132,7 @@ export type Database = {
           id?: string
           language?: string
           onboarded?: boolean
+          preferred_study_time?: string
           reminders?: Json
           strong_subjects?: string[]
           student_class?: string
