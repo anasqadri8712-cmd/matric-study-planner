@@ -9,9 +9,8 @@ import {
   Flame,
   LineChart,
   ListTodo,
-  Settings,
   Sparkles,
-  User,
+  Trophy,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { AppShell, CountBadge, SkeletonCard } from "@/components/app/AppShell";
@@ -98,8 +97,8 @@ function Home() {
     { to: "/progress", emoji: "📈", icon: LineChart, title: "Progress", desc: "Analytics & stats", badge: 0 },
     { to: "/notes", emoji: "📝", icon: FileText, title: "Notes", desc: "Revision material", badge: 0 },
     { to: "/tasks", search: { kind: "homework" }, emoji: "📖", icon: ClipboardList, title: "Homework", desc: "Pending homework", badge: homework.length },
-    { to: "/settings", emoji: "⚙️", icon: Settings, title: "Settings", desc: "Theme & reminders", badge: 0 },
-    { to: "/profile", emoji: "👤", icon: User, title: "Profile", desc: "Your study identity", badge: 0 },
+    { to: "/rewards", emoji: "🏆", icon: Trophy, title: "Rewards", desc: "Badges you earned", badge: 0 },
+    { to: "/plan-history", emoji: "🗂", icon: CalendarClock, title: "Plan History", desc: "Past weekly plans", badge: 0 },
   ];
 
   const firstName = (profile?.full_name || user?.email?.split("@")[0] || "Student").split(" ")[0];
