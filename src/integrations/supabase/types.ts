@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      achievements: {
+        Row: {
+          code: string
+          created_at: string
+          description: string
+          earned_at: string
+          id: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          description?: string
+          earned_at?: string
+          id?: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          description?: string
+          earned_at?: string
+          id?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       exams: {
         Row: {
           created_at: string
@@ -96,6 +126,7 @@ export type Database = {
           id: string
           language: string
           onboarded: boolean
+          phone: string
           preferred_study_time: string
           reminders: Json
           strong_subjects: string[]
@@ -103,6 +134,7 @@ export type Database = {
           study_goal: string
           theme: string
           updated_at: string
+          username: string
           weak_subjects: string[]
         }
         Insert: {
@@ -114,6 +146,7 @@ export type Database = {
           id: string
           language?: string
           onboarded?: boolean
+          phone?: string
           preferred_study_time?: string
           reminders?: Json
           strong_subjects?: string[]
@@ -121,6 +154,7 @@ export type Database = {
           study_goal?: string
           theme?: string
           updated_at?: string
+          username?: string
           weak_subjects?: string[]
         }
         Update: {
@@ -132,6 +166,7 @@ export type Database = {
           id?: string
           language?: string
           onboarded?: boolean
+          phone?: string
           preferred_study_time?: string
           reminders?: Json
           strong_subjects?: string[]
@@ -139,6 +174,7 @@ export type Database = {
           study_goal?: string
           theme?: string
           updated_at?: string
+          username?: string
           weak_subjects?: string[]
         }
         Relationships: []
@@ -178,22 +214,31 @@ export type Database = {
           created_at: string
           id: string
           plan: Json
+          status: string
           title: string
+          total_hours: number
           user_id: string
+          week_start: string
         }
         Insert: {
           created_at?: string
           id?: string
           plan: Json
+          status?: string
           title?: string
+          total_hours?: number
           user_id: string
+          week_start?: string
         }
         Update: {
           created_at?: string
           id?: string
           plan?: Json
+          status?: string
           title?: string
+          total_hours?: number
           user_id?: string
+          week_start?: string
         }
         Relationships: []
       }
@@ -233,6 +278,7 @@ export type Database = {
           id: string
           name: string
           priority: string
+          selected: boolean
           strength: string
           total_chapters: number
           updated_at: string
@@ -246,6 +292,7 @@ export type Database = {
           id?: string
           name: string
           priority?: string
+          selected?: boolean
           strength?: string
           total_chapters?: number
           updated_at?: string
@@ -259,6 +306,7 @@ export type Database = {
           id?: string
           name?: string
           priority?: string
+          selected?: boolean
           strength?: string
           total_chapters?: number
           updated_at?: string
