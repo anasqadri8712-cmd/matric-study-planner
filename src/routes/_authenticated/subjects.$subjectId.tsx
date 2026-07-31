@@ -4,7 +4,7 @@ import { ArrowLeft, ListTodo } from "lucide-react";
 import { AppShell, CountBadge, EmptyState, Loader } from "@/components/app/AppShell";
 import { Progress } from "@/components/ui/progress";
 import { useSession } from "@/lib/session";
-import { useSubjects, useTasks } from "@/lib/data";
+import { useAllSubjects, useTasks } from "@/lib/data";
 import { KIND_LABEL, STATUS_META, subjectIcon } from "@/lib/matric";
 import { cn } from "@/lib/utils";
 
@@ -32,7 +32,7 @@ function SubjectDetail() {
   const { subjectId } = Route.useParams();
   const navigate = useNavigate();
   const { user } = useSession();
-  const { data: subjects = [], isLoading } = useSubjects(user?.id);
+  const { data: subjects = [], isLoading } = useAllSubjects(user?.id);
   const { data: tasks = [] } = useTasks(user?.id);
 
   const subject = subjects.find((s) => s.id === subjectId);
