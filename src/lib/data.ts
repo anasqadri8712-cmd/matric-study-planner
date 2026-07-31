@@ -39,7 +39,20 @@ export function useSubjects(userId?: string) {
     queryKey: ["subjects", userId],
     enabled: !!userId,
     queryFn: async () =>
+      (unwrap(await supabase.from("subjects").select("*").order("created_at")) as Subject[]).filter(
+        (s) => s.selected !== false,
+      ),
+  });
+}
+
+/** Every subject row, including ones the student has de-selected. */
+export function useAllSubjects(userId?: string) {
+  return useQuery({
+    queryKey: ["subjects", userId],
+    enabled: !!userId,
+    queryFn: async () =>
       unwrap(await supabase.from("subjects").select("*").order("created_at")) as Subject[],
+    select: (rows) => rows,
   });
 }
 
@@ -115,6 +128,17 @@ export function useTaskHistory(userId?: string) {
   });
 }
 
+export function useAchievements(userId?: string) {
+  return useQuery({
+    queryKey: ["achievements", userId],
+    enabled: !!userId,
+    queryFn: async () =>
+      unwrap(
+        await supabase.from("achievements").select("*").order("earned_at", { ascending: false }),
+      ) as Tables<"achievements">[],
+  });
+}
+
 type TableName =
   | "subjects"
   | "tasks"
@@ -123,7 +147,8 @@ type TableName =
   | "study_plans"
   | "study_sessions"
   | "quizzes"
-  | "task_history";
+  | "task_history"
+  | "achievements";
 
 export function useInsert(table: TableName, key: string) {
   const qc = useQueryClient();
