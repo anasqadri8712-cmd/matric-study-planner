@@ -65,7 +65,10 @@ function TasksPage() {
   });
 
   const subjectNames = useMemo(
-    () => Array.from(new Set([...MATRIC_SUBJECTS.map((s) => s.name), ...subjects.map((s) => s.name)])),
+    () =>
+      subjects.length
+        ? Array.from(new Set(subjects.map((s) => s.name)))
+        : MATRIC_SUBJECTS.map((s) => s.name),
     [subjects],
   );
 
