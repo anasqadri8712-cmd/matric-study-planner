@@ -101,7 +101,7 @@ function Subjects() {
                     className="h-12 rounded-xl"
                   />
                   <datalist id="matric-subjects">
-                    {MATRIC_SUBJECTS.map((m) => (
+                    {missing.map((m) => (
                       <option key={m.name} value={m.name} />
                     ))}
                   </datalist>
