@@ -16,11 +16,13 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedTutorRouteImport } from './routes/_authenticated/tutor'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as AuthenticatedRewardsRouteImport } from './routes/_authenticated/rewards'
 import { Route as AuthenticatedQuizRouteImport } from './routes/_authenticated/quiz'
 import { Route as AuthenticatedProgressRouteImport } from './routes/_authenticated/progress'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedPlannerRouteImport } from './routes/_authenticated/planner'
 import { Route as AuthenticatedNotesRouteImport } from './routes/_authenticated/notes'
+import { Route as AuthenticatedMySubjectsRouteImport } from './routes/_authenticated/my-subjects'
 import { Route as AuthenticatedHomeRouteImport } from './routes/_authenticated/home'
 import { Route as AuthenticatedExamsRouteImport } from './routes/_authenticated/exams'
 import { Route as AuthenticatedEditProfileRouteImport } from './routes/_authenticated/edit-profile'
@@ -63,6 +65,11 @@ const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedRewardsRoute = AuthenticatedRewardsRouteImport.update({
+  id: '/rewards',
+  path: '/rewards',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedQuizRoute = AuthenticatedQuizRouteImport.update({
   id: '/quiz',
   path: '/quiz',
@@ -86,6 +93,11 @@ const AuthenticatedPlannerRoute = AuthenticatedPlannerRouteImport.update({
 const AuthenticatedNotesRoute = AuthenticatedNotesRouteImport.update({
   id: '/notes',
   path: '/notes',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedMySubjectsRoute = AuthenticatedMySubjectsRouteImport.update({
+  id: '/my-subjects',
+  path: '/my-subjects',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedHomeRoute = AuthenticatedHomeRouteImport.update({
@@ -136,11 +148,13 @@ export interface FileRoutesByFullPath {
   '/edit-profile': typeof AuthenticatedEditProfileRoute
   '/exams': typeof AuthenticatedExamsRoute
   '/home': typeof AuthenticatedHomeRoute
+  '/my-subjects': typeof AuthenticatedMySubjectsRoute
   '/notes': typeof AuthenticatedNotesRoute
   '/planner': typeof AuthenticatedPlannerRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/progress': typeof AuthenticatedProgressRoute
   '/quiz': typeof AuthenticatedQuizRoute
+  '/rewards': typeof AuthenticatedRewardsRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/tutor': typeof AuthenticatedTutorRoute
   '/subjects/$subjectId': typeof AuthenticatedSubjectsSubjectIdRoute
@@ -156,11 +170,13 @@ export interface FileRoutesByTo {
   '/edit-profile': typeof AuthenticatedEditProfileRoute
   '/exams': typeof AuthenticatedExamsRoute
   '/home': typeof AuthenticatedHomeRoute
+  '/my-subjects': typeof AuthenticatedMySubjectsRoute
   '/notes': typeof AuthenticatedNotesRoute
   '/planner': typeof AuthenticatedPlannerRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/progress': typeof AuthenticatedProgressRoute
   '/quiz': typeof AuthenticatedQuizRoute
+  '/rewards': typeof AuthenticatedRewardsRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/tutor': typeof AuthenticatedTutorRoute
   '/subjects/$subjectId': typeof AuthenticatedSubjectsSubjectIdRoute
@@ -178,11 +194,13 @@ export interface FileRoutesById {
   '/_authenticated/edit-profile': typeof AuthenticatedEditProfileRoute
   '/_authenticated/exams': typeof AuthenticatedExamsRoute
   '/_authenticated/home': typeof AuthenticatedHomeRoute
+  '/_authenticated/my-subjects': typeof AuthenticatedMySubjectsRoute
   '/_authenticated/notes': typeof AuthenticatedNotesRoute
   '/_authenticated/planner': typeof AuthenticatedPlannerRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/progress': typeof AuthenticatedProgressRoute
   '/_authenticated/quiz': typeof AuthenticatedQuizRoute
+  '/_authenticated/rewards': typeof AuthenticatedRewardsRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/tutor': typeof AuthenticatedTutorRoute
   '/_authenticated/subjects/$subjectId': typeof AuthenticatedSubjectsSubjectIdRoute
@@ -200,11 +218,13 @@ export interface FileRouteTypes {
     | '/edit-profile'
     | '/exams'
     | '/home'
+    | '/my-subjects'
     | '/notes'
     | '/planner'
     | '/profile'
     | '/progress'
     | '/quiz'
+    | '/rewards'
     | '/settings'
     | '/tutor'
     | '/subjects/$subjectId'
@@ -220,11 +240,13 @@ export interface FileRouteTypes {
     | '/edit-profile'
     | '/exams'
     | '/home'
+    | '/my-subjects'
     | '/notes'
     | '/planner'
     | '/profile'
     | '/progress'
     | '/quiz'
+    | '/rewards'
     | '/settings'
     | '/tutor'
     | '/subjects/$subjectId'
@@ -241,11 +263,13 @@ export interface FileRouteTypes {
     | '/_authenticated/edit-profile'
     | '/_authenticated/exams'
     | '/_authenticated/home'
+    | '/_authenticated/my-subjects'
     | '/_authenticated/notes'
     | '/_authenticated/planner'
     | '/_authenticated/profile'
     | '/_authenticated/progress'
     | '/_authenticated/quiz'
+    | '/_authenticated/rewards'
     | '/_authenticated/settings'
     | '/_authenticated/tutor'
     | '/_authenticated/subjects/$subjectId'
@@ -313,6 +337,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/rewards': {
+      id: '/_authenticated/rewards'
+      path: '/rewards'
+      fullPath: '/rewards'
+      preLoaderRoute: typeof AuthenticatedRewardsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/quiz': {
       id: '/_authenticated/quiz'
       path: '/quiz'
@@ -346,6 +377,13 @@ declare module '@tanstack/react-router' {
       path: '/notes'
       fullPath: '/notes'
       preLoaderRoute: typeof AuthenticatedNotesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/my-subjects': {
+      id: '/_authenticated/my-subjects'
+      path: '/my-subjects'
+      fullPath: '/my-subjects'
+      preLoaderRoute: typeof AuthenticatedMySubjectsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/home': {
@@ -404,11 +442,13 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedEditProfileRoute: typeof AuthenticatedEditProfileRoute
   AuthenticatedExamsRoute: typeof AuthenticatedExamsRoute
   AuthenticatedHomeRoute: typeof AuthenticatedHomeRoute
+  AuthenticatedMySubjectsRoute: typeof AuthenticatedMySubjectsRoute
   AuthenticatedNotesRoute: typeof AuthenticatedNotesRoute
   AuthenticatedPlannerRoute: typeof AuthenticatedPlannerRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedProgressRoute: typeof AuthenticatedProgressRoute
   AuthenticatedQuizRoute: typeof AuthenticatedQuizRoute
+  AuthenticatedRewardsRoute: typeof AuthenticatedRewardsRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedTutorRoute: typeof AuthenticatedTutorRoute
   AuthenticatedSubjectsSubjectIdRoute: typeof AuthenticatedSubjectsSubjectIdRoute
@@ -421,11 +461,13 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedEditProfileRoute: AuthenticatedEditProfileRoute,
   AuthenticatedExamsRoute: AuthenticatedExamsRoute,
   AuthenticatedHomeRoute: AuthenticatedHomeRoute,
+  AuthenticatedMySubjectsRoute: AuthenticatedMySubjectsRoute,
   AuthenticatedNotesRoute: AuthenticatedNotesRoute,
   AuthenticatedPlannerRoute: AuthenticatedPlannerRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedProgressRoute: AuthenticatedProgressRoute,
   AuthenticatedQuizRoute: AuthenticatedQuizRoute,
+  AuthenticatedRewardsRoute: AuthenticatedRewardsRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedTutorRoute: AuthenticatedTutorRoute,
   AuthenticatedSubjectsSubjectIdRoute: AuthenticatedSubjectsSubjectIdRoute,
