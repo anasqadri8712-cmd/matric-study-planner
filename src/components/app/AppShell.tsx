@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { BookOpen, CalendarRange, Home, LineChart, ListTodo, User } from "lucide-react";
+import { BookOpen, FileText, Home, ListTodo, User } from "lucide-react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
@@ -7,8 +7,7 @@ const NAV = [
   { to: "/home", label: "Home", icon: Home },
   { to: "/subjects", label: "Subjects", icon: BookOpen },
   { to: "/tasks", label: "Tasks", icon: ListTodo },
-  { to: "/planner", label: "Planner", icon: CalendarRange },
-  { to: "/progress", label: "Progress", icon: LineChart },
+  { to: "/notes", label: "Notes", icon: FileText },
   { to: "/profile", label: "Profile", icon: User },
 ] as const;
 
@@ -20,7 +19,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <div className="mx-auto w-full max-w-lg px-5 pt-6 pb-28">{children}</div>
 
       <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/85 backdrop-blur-xl">
-        <ul className="mx-auto grid max-w-lg grid-cols-6 px-1 py-2">
+        <ul className="mx-auto grid max-w-lg grid-cols-5 px-1 py-2">
           {NAV.map(({ to, label, icon: Icon }) => {
             const active = pathname === to || pathname.startsWith(`${to}/`);
             return (

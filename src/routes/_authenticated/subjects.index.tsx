@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useSession } from "@/lib/session";
-import { useInsert, useSubjects, useTasks } from "@/lib/data";
+import { useAllSubjects, useInsert, useSubjects, useTasks } from "@/lib/data";
 import { MATRIC_SUBJECTS, subjectIcon } from "@/lib/matric";
 
 export const Route = createFileRoute("/_authenticated/subjects/")({
@@ -27,6 +27,7 @@ export const Route = createFileRoute("/_authenticated/subjects/")({
 function Subjects() {
   const { user } = useSession();
   const { data: subjects = [], isLoading } = useSubjects(user?.id);
+  const { data: allSubjects = [] } = useAllSubjects(user?.id);
   const { data: tasks = [] } = useTasks(user?.id);
   const add = useInsert("subjects", "subjects");
 
@@ -36,8 +37,8 @@ function Subjects() {
   const [q, setQ] = useState("");
 
   const missing = useMemo(
-    () => MATRIC_SUBJECTS.filter((m) => !subjects.some((s) => s.name.toLowerCase() === m.name.toLowerCase())),
-    [subjects],
+    () => MATRIC_SUBJECTS.filter((m) => !allSubjects.some((s) => s.name.toLowerCase() === m.name.toLowerCase())),
+    [allSubjects],
   );
 
   const filtered = useMemo(() => {
@@ -100,7 +101,7 @@ function Subjects() {
                     className="h-12 rounded-xl"
                   />
                   <datalist id="matric-subjects">
-                    {MATRIC_SUBJECTS.map((m) => (
+                    {missing.map((m) => (
                       <option key={m.name} value={m.name} />
                     ))}
                   </datalist>
