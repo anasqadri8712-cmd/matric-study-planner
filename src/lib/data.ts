@@ -39,9 +39,8 @@ export function useSubjects(userId?: string) {
     queryKey: ["subjects", userId],
     enabled: !!userId,
     queryFn: async () =>
-      (unwrap(await supabase.from("subjects").select("*").order("created_at")) as Subject[]).filter(
-        (s) => s.selected !== false,
-      ),
+      unwrap(await supabase.from("subjects").select("*").order("created_at")) as Subject[],
+    select: (rows: Subject[]) => rows.filter((s) => s.selected !== false),
   });
 }
 
@@ -52,7 +51,6 @@ export function useAllSubjects(userId?: string) {
     enabled: !!userId,
     queryFn: async () =>
       unwrap(await supabase.from("subjects").select("*").order("created_at")) as Subject[],
-    select: (rows) => rows,
   });
 }
 
