@@ -1,7 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { CalendarRange, Check, Plus, Sparkles, Trash2 } from "lucide-react";
+import { CalendarRange, Check, History, Lightbulb, Plus, Sparkles, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell, EmptyState, PageHeader } from "@/components/app/AppShell";
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,7 @@ import {
   useUpdate,
 } from "@/lib/data";
 import { generateStudyPlan, type GeneratedPlan } from "@/lib/ai.functions";
+import { comparePlans, planOf, totalMinutes } from "@/lib/plan";
 
 export const Route = createFileRoute("/_authenticated/planner")({
   head: () => ({
@@ -58,6 +59,8 @@ function Planner() {
   const [busy, setBusy] = useState(false);
 
   const latestPlan = plans[0]?.plan as unknown as GeneratedPlan | undefined;
+  const previousPlanRow = plans[1];
+  const diffs = previousPlanRow ? comparePlans(latestPlan, planOf(previousPlanRow)).filter((d) => d.direction !== "same") : [];
 
   async function createTask() {
     if (!title.trim()) return toast.error("Give the task a title.");
@@ -81,6 +84,10 @@ function Planner() {
         .filter((t) => !t.completed)
         .slice(0, 12)
         .map((t) => [t.subject, t.title, t.due_date ? `due ${t.due_date}` : null].filter(Boolean).join(" - "));
+      const completedTasks = tasks
+        .filter((t) => t.completed || t.status === "completed")
+        .slice(0, 10)
+        .map((t) => [t.subject, t.title].filter(Boolean).join(" - "));
       const quizPerformance = quizzes
         .filter((q) => typeof q.score === "number")
         .slice(0, 10)
@@ -107,6 +114,7 @@ function Planner() {
           subjects: subjects.map((s) => s.name),
           examNote,
           pendingTasks,
+          completedTasks,
           quizPerformance,
           previousPlan: latestPlan
             ? JSON.stringify(latestPlan.days ?? []).slice(0, 2000)
@@ -114,7 +122,15 @@ function Planner() {
           variation: Math.floor(Math.random() * 1000000),
         },
       });
-      await savePlan.mutateAsync({ user_id: user!.id, plan: result });
+      const monday = new Date();
+      monday.setDate(monday.getDate() - ((monday.getDay() + 6) % 7));
+      await savePlan.mutateAsync({
+        user_id: user!.id,
+        plan: result,
+        week_start: monday.toISOString().slice(0, 10),
+        status: "active",
+        total_hours: Math.round((totalMinutes(result) / 60) * 10) / 10,
+      });
       toast.success("Your weekly plan is ready!");
     } catch {
       toast.error("Could not generate the plan. Please try again.");
@@ -146,6 +162,34 @@ function Planner() {
           {latestPlan ? (
             <>
               <p className="surface-card p-4 text-sm text-muted-foreground">{latestPlan.summary}</p>
+
+              {latestPlan.why?.length ? (
+                <div className="surface-card animate-rise border-primary/40 p-4">
+                  <p className="flex items-center gap-2 text-sm font-semibold text-primary">
+                    <Lightbulb className="size-4" /> Why this plan?
+                  </p>
+                  <ul className="mt-2 space-y-1.5 text-sm text-muted-foreground">
+                    {latestPlan.why.map((w) => (
+                      <li key={w}>• {w}</li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+
+              {diffs.length ? (
+                <div className="surface-card p-4">
+                  <p className="text-sm font-semibold">What changed since last week</p>
+                  <ul className="mt-2 space-y-1.5 text-xs text-muted-foreground">
+                    {diffs.slice(0, 6).map((d) => (
+                      <li key={d.subject}>
+                        {d.direction === "up" ? "🔼" : d.direction === "down" ? "🔽" : d.direction === "new" ? "🆕" : "⛔"}{" "}
+                        <span className="font-medium text-foreground">{d.subject}</span> — {d.change}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+
               {latestPlan.days?.map((day) => (
                 <div key={day.day} className="surface-card animate-rise p-4">
                   <p className="text-sm font-semibold">{day.day}</p>
@@ -173,6 +217,11 @@ function Planner() {
                   </ul>
                 </div>
               ) : null}
+              <Button asChild variant="outline" className="press h-12 w-full rounded-2xl">
+                <Link to="/plan-history">
+                  <History className="mr-1 size-4" /> View plan history
+                </Link>
+              </Button>
             </>
           ) : (
             <EmptyState

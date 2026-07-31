@@ -21,6 +21,7 @@ import { Route as AuthenticatedQuizRouteImport } from './routes/_authenticated/q
 import { Route as AuthenticatedProgressRouteImport } from './routes/_authenticated/progress'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedPlannerRouteImport } from './routes/_authenticated/planner'
+import { Route as AuthenticatedPlanHistoryRouteImport } from './routes/_authenticated/plan-history'
 import { Route as AuthenticatedNotesRouteImport } from './routes/_authenticated/notes'
 import { Route as AuthenticatedMySubjectsRouteImport } from './routes/_authenticated/my-subjects'
 import { Route as AuthenticatedHomeRouteImport } from './routes/_authenticated/home'
@@ -90,6 +91,12 @@ const AuthenticatedPlannerRoute = AuthenticatedPlannerRouteImport.update({
   path: '/planner',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedPlanHistoryRoute =
+  AuthenticatedPlanHistoryRouteImport.update({
+    id: '/plan-history',
+    path: '/plan-history',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedNotesRoute = AuthenticatedNotesRouteImport.update({
   id: '/notes',
   path: '/notes',
@@ -150,6 +157,7 @@ export interface FileRoutesByFullPath {
   '/home': typeof AuthenticatedHomeRoute
   '/my-subjects': typeof AuthenticatedMySubjectsRoute
   '/notes': typeof AuthenticatedNotesRoute
+  '/plan-history': typeof AuthenticatedPlanHistoryRoute
   '/planner': typeof AuthenticatedPlannerRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/progress': typeof AuthenticatedProgressRoute
@@ -172,6 +180,7 @@ export interface FileRoutesByTo {
   '/home': typeof AuthenticatedHomeRoute
   '/my-subjects': typeof AuthenticatedMySubjectsRoute
   '/notes': typeof AuthenticatedNotesRoute
+  '/plan-history': typeof AuthenticatedPlanHistoryRoute
   '/planner': typeof AuthenticatedPlannerRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/progress': typeof AuthenticatedProgressRoute
@@ -196,6 +205,7 @@ export interface FileRoutesById {
   '/_authenticated/home': typeof AuthenticatedHomeRoute
   '/_authenticated/my-subjects': typeof AuthenticatedMySubjectsRoute
   '/_authenticated/notes': typeof AuthenticatedNotesRoute
+  '/_authenticated/plan-history': typeof AuthenticatedPlanHistoryRoute
   '/_authenticated/planner': typeof AuthenticatedPlannerRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/progress': typeof AuthenticatedProgressRoute
@@ -220,6 +230,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/my-subjects'
     | '/notes'
+    | '/plan-history'
     | '/planner'
     | '/profile'
     | '/progress'
@@ -242,6 +253,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/my-subjects'
     | '/notes'
+    | '/plan-history'
     | '/planner'
     | '/profile'
     | '/progress'
@@ -265,6 +277,7 @@ export interface FileRouteTypes {
     | '/_authenticated/home'
     | '/_authenticated/my-subjects'
     | '/_authenticated/notes'
+    | '/_authenticated/plan-history'
     | '/_authenticated/planner'
     | '/_authenticated/profile'
     | '/_authenticated/progress'
@@ -372,6 +385,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPlannerRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/plan-history': {
+      id: '/_authenticated/plan-history'
+      path: '/plan-history'
+      fullPath: '/plan-history'
+      preLoaderRoute: typeof AuthenticatedPlanHistoryRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/notes': {
       id: '/_authenticated/notes'
       path: '/notes'
@@ -444,6 +464,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedHomeRoute: typeof AuthenticatedHomeRoute
   AuthenticatedMySubjectsRoute: typeof AuthenticatedMySubjectsRoute
   AuthenticatedNotesRoute: typeof AuthenticatedNotesRoute
+  AuthenticatedPlanHistoryRoute: typeof AuthenticatedPlanHistoryRoute
   AuthenticatedPlannerRoute: typeof AuthenticatedPlannerRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedProgressRoute: typeof AuthenticatedProgressRoute
@@ -463,6 +484,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedHomeRoute: AuthenticatedHomeRoute,
   AuthenticatedMySubjectsRoute: AuthenticatedMySubjectsRoute,
   AuthenticatedNotesRoute: AuthenticatedNotesRoute,
+  AuthenticatedPlanHistoryRoute: AuthenticatedPlanHistoryRoute,
   AuthenticatedPlannerRoute: AuthenticatedPlannerRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedProgressRoute: AuthenticatedProgressRoute,
