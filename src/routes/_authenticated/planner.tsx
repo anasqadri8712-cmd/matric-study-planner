@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { CalendarRange, Check, History, Lightbulb, Plus, Sparkles, Trash2 } from "lucide-react";
+import { CalendarRange, Check, GitCompareArrows, History, Lightbulb, Plus, Sparkles, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell, EmptyState, PageHeader } from "@/components/app/AppShell";
 import { Button } from "@/components/ui/button";
