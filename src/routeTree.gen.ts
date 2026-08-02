@@ -27,6 +27,7 @@ import { Route as AuthenticatedMySubjectsRouteImport } from './routes/_authentic
 import { Route as AuthenticatedHomeRouteImport } from './routes/_authenticated/home'
 import { Route as AuthenticatedExamsRouteImport } from './routes/_authenticated/exams'
 import { Route as AuthenticatedEditProfileRouteImport } from './routes/_authenticated/edit-profile'
+import { Route as AuthenticatedComparePlansRouteImport } from './routes/_authenticated/compare-plans'
 import { Route as AuthenticatedTasksIndexRouteImport } from './routes/_authenticated/tasks.index'
 import { Route as AuthenticatedSubjectsIndexRouteImport } from './routes/_authenticated/subjects.index'
 import { Route as AuthenticatedTasksTaskIdRouteImport } from './routes/_authenticated/tasks.$taskId'
@@ -123,6 +124,12 @@ const AuthenticatedEditProfileRoute =
     path: '/edit-profile',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedComparePlansRoute =
+  AuthenticatedComparePlansRouteImport.update({
+    id: '/compare-plans',
+    path: '/compare-plans',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedTasksIndexRoute = AuthenticatedTasksIndexRouteImport.update({
   id: '/tasks/',
   path: '/tasks/',
@@ -152,6 +159,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/compare-plans': typeof AuthenticatedComparePlansRoute
   '/edit-profile': typeof AuthenticatedEditProfileRoute
   '/exams': typeof AuthenticatedExamsRoute
   '/home': typeof AuthenticatedHomeRoute
@@ -175,6 +183,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/compare-plans': typeof AuthenticatedComparePlansRoute
   '/edit-profile': typeof AuthenticatedEditProfileRoute
   '/exams': typeof AuthenticatedExamsRoute
   '/home': typeof AuthenticatedHomeRoute
@@ -200,6 +209,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/_authenticated/compare-plans': typeof AuthenticatedComparePlansRoute
   '/_authenticated/edit-profile': typeof AuthenticatedEditProfileRoute
   '/_authenticated/exams': typeof AuthenticatedExamsRoute
   '/_authenticated/home': typeof AuthenticatedHomeRoute
@@ -225,6 +235,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/compare-plans'
     | '/edit-profile'
     | '/exams'
     | '/home'
@@ -248,6 +259,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/compare-plans'
     | '/edit-profile'
     | '/exams'
     | '/home'
@@ -272,6 +284,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/_authenticated/compare-plans'
     | '/_authenticated/edit-profile'
     | '/_authenticated/exams'
     | '/_authenticated/home'
@@ -427,6 +440,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedEditProfileRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/compare-plans': {
+      id: '/_authenticated/compare-plans'
+      path: '/compare-plans'
+      fullPath: '/compare-plans'
+      preLoaderRoute: typeof AuthenticatedComparePlansRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/tasks/': {
       id: '/_authenticated/tasks/'
       path: '/tasks'
@@ -459,6 +479,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedComparePlansRoute: typeof AuthenticatedComparePlansRoute
   AuthenticatedEditProfileRoute: typeof AuthenticatedEditProfileRoute
   AuthenticatedExamsRoute: typeof AuthenticatedExamsRoute
   AuthenticatedHomeRoute: typeof AuthenticatedHomeRoute
@@ -479,6 +500,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedComparePlansRoute: AuthenticatedComparePlansRoute,
   AuthenticatedEditProfileRoute: AuthenticatedEditProfileRoute,
   AuthenticatedExamsRoute: AuthenticatedExamsRoute,
   AuthenticatedHomeRoute: AuthenticatedHomeRoute,

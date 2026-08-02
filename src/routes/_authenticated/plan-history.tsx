@@ -1,6 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { CalendarRange, ChevronDown } from "lucide-react";
+import { CalendarRange, ChevronDown, GitCompareArrows } from "lucide-react";
 import { AppShell, EmptyState, Loader, PageHeader } from "@/components/app/AppShell";
 import { cn } from "@/lib/utils";
 import { useSession } from "@/lib/session";
@@ -27,6 +27,18 @@ function PlanHistoryPage() {
   return (
     <AppShell>
       <PageHeader title="Plan History" subtitle="Every weekly plan is kept — nothing is overwritten" />
+
+      {plans.length > 1 ? (
+        <Link
+          to="/compare-plans"
+          className="press mb-4 flex items-center gap-3 rounded-2xl border border-border p-3 text-sm font-medium"
+        >
+          <span className="flex size-9 items-center justify-center rounded-xl bg-primary/12 text-primary">
+            <GitCompareArrows className="size-4" />
+          </span>
+          Compare two plans in detail
+        </Link>
+      ) : null}
 
       {isLoading ? (
         <Loader label="Loading plans" />

@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { CalendarRange, Check, History, Lightbulb, Plus, Sparkles, Trash2 } from "lucide-react";
+import { CalendarRange, Check, GitCompareArrows, History, Lightbulb, Plus, Sparkles, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell, EmptyState, PageHeader } from "@/components/app/AppShell";
 import { Button } from "@/components/ui/button";
@@ -217,11 +217,18 @@ function Planner() {
                   </ul>
                 </div>
               ) : null}
-              <Button asChild variant="outline" className="press h-12 w-full rounded-2xl">
-                <Link to="/plan-history">
-                  <History className="mr-1 size-4" /> View plan history
-                </Link>
-              </Button>
+              <div className="grid grid-cols-2 gap-3">
+                <Button asChild variant="outline" className="press h-12 w-full rounded-2xl">
+                  <Link to="/plan-history">
+                    <History className="mr-1 size-4" /> History
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" className="press h-12 w-full rounded-2xl">
+                  <Link to="/compare-plans">
+                    <GitCompareArrows className="mr-1 size-4" /> Compare
+                  </Link>
+                </Button>
+              </div>
             </>
           ) : (
             <EmptyState
