@@ -52,7 +52,7 @@ function TasksPage() {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({
     title: "",
-    subject: MATRIC_SUBJECTS[0].name as string,
+    subject: "" as string,
     topic: "",
     chapter: "",
     kind: "task" as string,
@@ -65,12 +65,16 @@ function TasksPage() {
   });
 
   const subjectNames = useMemo(
-    () =>
-      subjects.length
-        ? Array.from(new Set(subjects.map((s) => s.name)))
-        : MATRIC_SUBJECTS.map((s) => s.name),
+    () => Array.from(new Set(subjects.map((s) => s.name))),
     [subjects],
   );
+
+  useEffect(() => {
+    if (!subjectNames.length) return;
+    if (!form.subject || !subjectNames.includes(form.subject)) {
+      setForm((f) => ({ ...f, subject: subjectNames[0] }));
+    }
+  }, [subjectNames, form.subject]);
 
   const filtered = useMemo(() => {
     const term = q.trim().toLowerCase();
