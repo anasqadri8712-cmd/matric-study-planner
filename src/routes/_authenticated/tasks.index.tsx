@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ListTodo, Plus, Search } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell, EmptyState, PageHeader, SkeletonCard } from "@/components/app/AppShell";
@@ -13,7 +13,6 @@ import { useInsert, useSubjects, useTasks } from "@/lib/data";
 import {
   DIFFICULTIES,
   KIND_LABEL,
-  MATRIC_SUBJECTS,
   STATUS_META,
   TASK_KINDS,
   subjectIcon,
