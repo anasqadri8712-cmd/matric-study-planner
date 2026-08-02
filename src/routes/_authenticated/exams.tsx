@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CalendarClock, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell, EmptyState, PageHeader } from "@/components/app/AppShell";
@@ -8,8 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useSession } from "@/lib/session";
-import { useExams, useInsert, useRemove } from "@/lib/data";
-import { countdownText, daysUntil, MATRIC_SUBJECTS, subjectIcon } from "@/lib/matric";
+import { useExams, useInsert, useRemove, useSubjects } from "@/lib/data";
+import { countdownText, daysUntil, subjectIcon } from "@/lib/matric";
 
 export const Route = createFileRoute("/_authenticated/exams")({
   head: () => ({
@@ -29,11 +29,18 @@ function Exams() {
   const add = useInsert("exams", "exams");
   const remove = useRemove("exams", "exams");
 
-  const [subject, setSubject] = useState<string>(MATRIC_SUBJECTS[0].name);
+  const { data: mySubjects = [] } = useSubjects(user?.id);
+  const subjectNames = useMemo(() => Array.from(new Set(mySubjects.map((s) => s.name))), [mySubjects]);
+  const [subject, setSubject] = useState<string>("");
   const [date, setDate] = useState("");
   const [open, setOpen] = useState(false);
 
+  useEffect(() => {
+    if (subjectNames.length && !subjectNames.includes(subject)) setSubject(subjectNames[0]);
+  }, [subjectNames, subject]);
+
   async function create() {
+    if (!subject) return toast.error("Select subjects in My Subjects first.");
     if (!date) return toast.error("Pick the exam start date.");
     await add.mutateAsync({ user_id: user!.id, title: `${subject} Exam`, subject, exam_date: date });
     setDate("");
@@ -65,9 +72,9 @@ function Exams() {
                     onChange={(e) => setSubject(e.target.value)}
                     className="h-12 w-full rounded-xl border border-border bg-background px-3 text-sm"
                   >
-                    {MATRIC_SUBJECTS.map((s) => (
-                      <option key={s.name} value={s.name}>
-                        {s.name}
+                    {subjectNames.map((n) => (
+                      <option key={n} value={n}>
+                        {n}
                       </option>
                     ))}
                   </select>

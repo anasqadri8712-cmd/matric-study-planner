@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ListTodo, Plus, Search } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell, EmptyState, PageHeader, SkeletonCard } from "@/components/app/AppShell";
@@ -13,7 +13,6 @@ import { useInsert, useSubjects, useTasks } from "@/lib/data";
 import {
   DIFFICULTIES,
   KIND_LABEL,
-  MATRIC_SUBJECTS,
   STATUS_META,
   TASK_KINDS,
   subjectIcon,
@@ -52,7 +51,7 @@ function TasksPage() {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({
     title: "",
-    subject: MATRIC_SUBJECTS[0].name as string,
+    subject: "" as string,
     topic: "",
     chapter: "",
     kind: "task" as string,
@@ -65,12 +64,16 @@ function TasksPage() {
   });
 
   const subjectNames = useMemo(
-    () =>
-      subjects.length
-        ? Array.from(new Set(subjects.map((s) => s.name)))
-        : MATRIC_SUBJECTS.map((s) => s.name),
+    () => Array.from(new Set(subjects.map((s) => s.name))),
     [subjects],
   );
+
+  useEffect(() => {
+    if (!subjectNames.length) return;
+    if (!form.subject || !subjectNames.includes(form.subject)) {
+      setForm((f) => ({ ...f, subject: subjectNames[0] }));
+    }
+  }, [subjectNames, form.subject]);
 
   const filtered = useMemo(() => {
     const term = q.trim().toLowerCase();
