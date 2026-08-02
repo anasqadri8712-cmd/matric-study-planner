@@ -217,11 +217,18 @@ function Planner() {
                   </ul>
                 </div>
               ) : null}
-              <Button asChild variant="outline" className="press h-12 w-full rounded-2xl">
-                <Link to="/plan-history">
-                  <History className="mr-1 size-4" /> View plan history
-                </Link>
-              </Button>
+              <div className="grid grid-cols-2 gap-3">
+                <Button asChild variant="outline" className="press h-12 w-full rounded-2xl">
+                  <Link to="/plan-history">
+                    <History className="mr-1 size-4" /> History
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" className="press h-12 w-full rounded-2xl">
+                  <Link to="/compare-plans">
+                    <GitCompareArrows className="mr-1 size-4" /> Compare
+                  </Link>
+                </Button>
+              </div>
             </>
           ) : (
             <EmptyState
