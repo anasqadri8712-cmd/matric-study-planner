@@ -31,7 +31,7 @@ function Subjects() {
   const { data: tasks = [] } = useTasks(user?.id);
   const add = useInsert("subjects", "subjects");
 
-  const [name, setName] = useState<string>(MATRIC_SUBJECTS[0].name);
+  const [name, setName] = useState<string>("");
   const [chapters, setChapters] = useState("10");
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
