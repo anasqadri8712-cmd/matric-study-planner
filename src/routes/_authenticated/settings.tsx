@@ -1,7 +1,7 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Download, LogOut, Moon, ShieldCheck, Sun, Upload } from "lucide-react";
+import { ChevronRight, Download, Info, Lock, LogOut, Moon, ShieldCheck, Sun, Upload } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell, PageHeader } from "@/components/app/AppShell";
 import { Button } from "@/components/ui/button";
@@ -135,6 +135,29 @@ function SettingsPage() {
         <Button variant="outline" onClick={sendReset} className="press mt-4 h-11 w-full rounded-xl">
           Send reset link
         </Button>
+      </section>
+
+      <section className="surface-card animate-rise mt-3 divide-y divide-border p-0">
+        <Link to="/about" className="press flex items-center gap-4 p-5">
+          <span className="flex size-10 items-center justify-center rounded-xl bg-primary/12 text-primary">
+            <Info className="size-5" />
+          </span>
+          <div className="flex-1">
+            <p className="text-sm font-semibold">About Us</p>
+            <p className="text-xs text-muted-foreground">What this app is and who it is built for</p>
+          </div>
+          <ChevronRight className="size-4 text-muted-foreground" />
+        </Link>
+        <Link to="/privacy-policy" className="press flex items-center gap-4 p-5">
+          <span className="flex size-10 items-center justify-center rounded-xl bg-primary/12 text-primary">
+            <Lock className="size-5" />
+          </span>
+          <div className="flex-1">
+            <p className="text-sm font-semibold">Privacy Policy</p>
+            <p className="text-xs text-muted-foreground">How your study data is stored and protected</p>
+          </div>
+          <ChevronRight className="size-4 text-muted-foreground" />
+        </Link>
       </section>
 
       <Button

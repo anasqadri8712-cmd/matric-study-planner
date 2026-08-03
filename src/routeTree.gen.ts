@@ -20,6 +20,7 @@ import { Route as AuthenticatedRewardsRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedQuizRouteImport } from './routes/_authenticated/quiz'
 import { Route as AuthenticatedProgressRouteImport } from './routes/_authenticated/progress'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
+import { Route as AuthenticatedPrivacyPolicyRouteImport } from './routes/_authenticated/privacy-policy'
 import { Route as AuthenticatedPlannerRouteImport } from './routes/_authenticated/planner'
 import { Route as AuthenticatedPlanHistoryRouteImport } from './routes/_authenticated/plan-history'
 import { Route as AuthenticatedNotesRouteImport } from './routes/_authenticated/notes'
@@ -28,6 +29,7 @@ import { Route as AuthenticatedHomeRouteImport } from './routes/_authenticated/h
 import { Route as AuthenticatedExamsRouteImport } from './routes/_authenticated/exams'
 import { Route as AuthenticatedEditProfileRouteImport } from './routes/_authenticated/edit-profile'
 import { Route as AuthenticatedComparePlansRouteImport } from './routes/_authenticated/compare-plans'
+import { Route as AuthenticatedAboutRouteImport } from './routes/_authenticated/about'
 import { Route as AuthenticatedTasksIndexRouteImport } from './routes/_authenticated/tasks.index'
 import { Route as AuthenticatedSubjectsIndexRouteImport } from './routes/_authenticated/subjects.index'
 import { Route as AuthenticatedTasksTaskIdRouteImport } from './routes/_authenticated/tasks.$taskId'
@@ -87,6 +89,12 @@ const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedPrivacyPolicyRoute =
+  AuthenticatedPrivacyPolicyRouteImport.update({
+    id: '/privacy-policy',
+    path: '/privacy-policy',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedPlannerRoute = AuthenticatedPlannerRouteImport.update({
   id: '/planner',
   path: '/planner',
@@ -130,6 +138,11 @@ const AuthenticatedComparePlansRoute =
     path: '/compare-plans',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAboutRoute = AuthenticatedAboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedTasksIndexRoute = AuthenticatedTasksIndexRouteImport.update({
   id: '/tasks/',
   path: '/tasks/',
@@ -159,6 +172,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/about': typeof AuthenticatedAboutRoute
   '/compare-plans': typeof AuthenticatedComparePlansRoute
   '/edit-profile': typeof AuthenticatedEditProfileRoute
   '/exams': typeof AuthenticatedExamsRoute
@@ -167,6 +181,7 @@ export interface FileRoutesByFullPath {
   '/notes': typeof AuthenticatedNotesRoute
   '/plan-history': typeof AuthenticatedPlanHistoryRoute
   '/planner': typeof AuthenticatedPlannerRoute
+  '/privacy-policy': typeof AuthenticatedPrivacyPolicyRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/progress': typeof AuthenticatedProgressRoute
   '/quiz': typeof AuthenticatedQuizRoute
@@ -183,6 +198,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/about': typeof AuthenticatedAboutRoute
   '/compare-plans': typeof AuthenticatedComparePlansRoute
   '/edit-profile': typeof AuthenticatedEditProfileRoute
   '/exams': typeof AuthenticatedExamsRoute
@@ -191,6 +207,7 @@ export interface FileRoutesByTo {
   '/notes': typeof AuthenticatedNotesRoute
   '/plan-history': typeof AuthenticatedPlanHistoryRoute
   '/planner': typeof AuthenticatedPlannerRoute
+  '/privacy-policy': typeof AuthenticatedPrivacyPolicyRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/progress': typeof AuthenticatedProgressRoute
   '/quiz': typeof AuthenticatedQuizRoute
@@ -209,6 +226,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/_authenticated/about': typeof AuthenticatedAboutRoute
   '/_authenticated/compare-plans': typeof AuthenticatedComparePlansRoute
   '/_authenticated/edit-profile': typeof AuthenticatedEditProfileRoute
   '/_authenticated/exams': typeof AuthenticatedExamsRoute
@@ -217,6 +235,7 @@ export interface FileRoutesById {
   '/_authenticated/notes': typeof AuthenticatedNotesRoute
   '/_authenticated/plan-history': typeof AuthenticatedPlanHistoryRoute
   '/_authenticated/planner': typeof AuthenticatedPlannerRoute
+  '/_authenticated/privacy-policy': typeof AuthenticatedPrivacyPolicyRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/progress': typeof AuthenticatedProgressRoute
   '/_authenticated/quiz': typeof AuthenticatedQuizRoute
@@ -235,6 +254,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/about'
     | '/compare-plans'
     | '/edit-profile'
     | '/exams'
@@ -243,6 +263,7 @@ export interface FileRouteTypes {
     | '/notes'
     | '/plan-history'
     | '/planner'
+    | '/privacy-policy'
     | '/profile'
     | '/progress'
     | '/quiz'
@@ -259,6 +280,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/about'
     | '/compare-plans'
     | '/edit-profile'
     | '/exams'
@@ -267,6 +289,7 @@ export interface FileRouteTypes {
     | '/notes'
     | '/plan-history'
     | '/planner'
+    | '/privacy-policy'
     | '/profile'
     | '/progress'
     | '/quiz'
@@ -284,6 +307,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/_authenticated/about'
     | '/_authenticated/compare-plans'
     | '/_authenticated/edit-profile'
     | '/_authenticated/exams'
@@ -292,6 +316,7 @@ export interface FileRouteTypes {
     | '/_authenticated/notes'
     | '/_authenticated/plan-history'
     | '/_authenticated/planner'
+    | '/_authenticated/privacy-policy'
     | '/_authenticated/profile'
     | '/_authenticated/progress'
     | '/_authenticated/quiz'
@@ -391,6 +416,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProfileRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/privacy-policy': {
+      id: '/_authenticated/privacy-policy'
+      path: '/privacy-policy'
+      fullPath: '/privacy-policy'
+      preLoaderRoute: typeof AuthenticatedPrivacyPolicyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/planner': {
       id: '/_authenticated/planner'
       path: '/planner'
@@ -447,6 +479,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedComparePlansRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/about': {
+      id: '/_authenticated/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AuthenticatedAboutRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/tasks/': {
       id: '/_authenticated/tasks/'
       path: '/tasks'
@@ -479,6 +518,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAboutRoute: typeof AuthenticatedAboutRoute
   AuthenticatedComparePlansRoute: typeof AuthenticatedComparePlansRoute
   AuthenticatedEditProfileRoute: typeof AuthenticatedEditProfileRoute
   AuthenticatedExamsRoute: typeof AuthenticatedExamsRoute
@@ -487,6 +527,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedNotesRoute: typeof AuthenticatedNotesRoute
   AuthenticatedPlanHistoryRoute: typeof AuthenticatedPlanHistoryRoute
   AuthenticatedPlannerRoute: typeof AuthenticatedPlannerRoute
+  AuthenticatedPrivacyPolicyRoute: typeof AuthenticatedPrivacyPolicyRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedProgressRoute: typeof AuthenticatedProgressRoute
   AuthenticatedQuizRoute: typeof AuthenticatedQuizRoute
@@ -500,6 +541,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAboutRoute: AuthenticatedAboutRoute,
   AuthenticatedComparePlansRoute: AuthenticatedComparePlansRoute,
   AuthenticatedEditProfileRoute: AuthenticatedEditProfileRoute,
   AuthenticatedExamsRoute: AuthenticatedExamsRoute,
@@ -508,6 +550,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedNotesRoute: AuthenticatedNotesRoute,
   AuthenticatedPlanHistoryRoute: AuthenticatedPlanHistoryRoute,
   AuthenticatedPlannerRoute: AuthenticatedPlannerRoute,
+  AuthenticatedPrivacyPolicyRoute: AuthenticatedPrivacyPolicyRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedProgressRoute: AuthenticatedProgressRoute,
   AuthenticatedQuizRoute: AuthenticatedQuizRoute,
