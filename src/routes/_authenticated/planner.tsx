@@ -24,7 +24,6 @@ import {
 } from "@/lib/data";
 import { generateStudyPlan, type GeneratedPlan } from "@/lib/ai.functions";
 import { comparePlans, planOf, totalMinutes } from "@/lib/plan";
-import { SharePlanButton } from "@/components/app/SharePlanButton";
 
 export const Route = createFileRoute("/_authenticated/planner")({
   head: () => ({
@@ -62,19 +61,6 @@ function Planner() {
   const latestPlan = plans[0]?.plan as unknown as GeneratedPlan | undefined;
   const previousPlanRow = plans[1];
   const diffs = previousPlanRow ? comparePlans(latestPlan, planOf(previousPlanRow)).filter((d) => d.direction !== "same") : [];
-
-  const shareMeta = {
-    studentName: profile?.full_name ?? null,
-    studentClass: profile?.student_class ?? null,
-    board: profile?.board ?? null,
-    weekLabel: plans[0]?.week_start
-      ? `Week of ${new Date(`${plans[0].week_start}T00:00:00`).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" })}`
-      : undefined,
-    exams: exams.map((e) => ({
-      subject: e.subject || e.title,
-      daysLeft: Math.max(0, Math.ceil((new Date(e.exam_date).getTime() - Date.now()) / 86400000)),
-    })),
-  };
 
   async function createTask() {
     if (!title.trim()) return toast.error("Give the task a title.");
@@ -176,8 +162,6 @@ function Planner() {
           {latestPlan ? (
             <>
               <p className="surface-card p-4 text-sm text-muted-foreground">{latestPlan.summary}</p>
-
-              <SharePlanButton plan={latestPlan} meta={shareMeta} />
 
               {latestPlan.why?.length ? (
                 <div className="surface-card animate-rise border-primary/40 p-4">
