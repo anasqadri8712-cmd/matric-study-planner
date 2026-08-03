@@ -1,5 +1,7 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
+import { useSession } from "@/lib/session";
+import { useFirstRunSeed } from "@/lib/seed";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
@@ -8,5 +10,11 @@ export const Route = createFileRoute("/_authenticated")({
     if (error || !data.user) throw redirect({ to: "/auth" });
     return { user: data.user };
   },
-  component: () => <Outlet />,
+  component: AuthenticatedLayout,
 });
+
+function AuthenticatedLayout() {
+  const { user } = useSession();
+  useFirstRunSeed(user?.id);
+  return <Outlet />;
+}
