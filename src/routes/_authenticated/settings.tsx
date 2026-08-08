@@ -4,6 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Download, LogOut, Moon, ShieldCheck, Sun, Upload } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell, PageHeader } from "@/components/app/AppShell";
+import { StudyReportActions } from "@/components/app/StudyReportActions";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import {
@@ -135,6 +136,10 @@ function SettingsPage() {
         <Button variant="outline" onClick={sendReset} className="press mt-4 h-11 w-full rounded-xl">
           Send reset link
         </Button>
+      </section>
+
+      <section className="animate-rise mt-3">
+        <StudyReportActions />
       </section>
 
       <Button

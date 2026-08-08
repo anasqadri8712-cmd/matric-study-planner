@@ -13,10 +13,11 @@ import {
   Trophy,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { AppShell, CountBadge, SkeletonCard } from "@/components/app/AppShell";
+import { AppShell, CountBadge, SkeletonBlock } from "@/components/app/AppShell";
+import { StudyReportActions } from "@/components/app/StudyReportActions";
 import { useSession } from "@/lib/session";
 import { getGreeting, formatToday } from "@/lib/greeting";
-import { useExams, useProfile, useSessions, useSubjects, useTasks } from "@/lib/data";
+import { useExams, useProfile, useQuizzes, useSessions, useSubjects, useTasks } from "@/lib/data";
 import { countdownText, subjectIcon } from "@/lib/matric";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
@@ -51,6 +52,7 @@ function Home() {
   const { data: subjects = [] } = useSubjects(user?.id);
   const { data: exams = [] } = useExams(user?.id);
   const { data: sessions = [] } = useSessions(user?.id);
+  const { data: quizzes = [] } = useQuizzes(user?.id);
 
   const [now, setNow] = useState(() => new Date());
   useEffect(() => {
@@ -103,6 +105,48 @@ function Home() {
 
   const firstName = (profile?.full_name || user?.email?.split("@")[0] || "Student").split(" ")[0];
 
+  const dailyGoalMinutes = Math.round(Number(profile?.daily_hours ?? 3) * 60);
+  const studiedToday = sessions
+    .filter((s) => s.session_date === todayStr)
+    .reduce((sum, s) => sum + (Number(s.minutes) || 0), 0);
+  const goalPct = dailyGoalMinutes ? Math.min(100, Math.round((studiedToday / dailyGoalMinutes) * 100)) : 0;
+
+  const focus = useMemo(() => {
+    const weak = (profile?.weak_subjects ?? []).map((w) => w.toLowerCase());
+    const strong = (profile?.strong_subjects ?? []).map((w) => w.toLowerCase());
+    const scored = subjects.map((s) => {
+      const lower = s.name.toLowerCase();
+      const exam = upcomingExams.find((e) => (e.subject ?? "").toLowerCase() === lower);
+      const daysLeft = exam
+        ? Math.max(0, Math.ceil((new Date(exam.exam_date).getTime() - now.getTime()) / 86_400_000))
+        : null;
+      const quiz = quizzes.find((q) => (q.subject ?? "").toLowerCase() === lower);
+      const pendingCount = pending.filter((t) => t.subject_id === s.id || t.subject === s.name).length;
+
+      let score = 0;
+      const reasons: string[] = [];
+      if (weak.includes(lower)) {
+        score += 45;
+        reasons.push("marked weak");
+      }
+      if (strong.includes(lower)) score -= 20;
+      if (daysLeft !== null) {
+        score += Math.max(10, 60 - daysLeft * 4);
+        reasons.push(`exam in ${daysLeft}d`);
+      }
+      if (quiz && typeof quiz.score === "number") {
+        score += Math.max(0, 70 - Number(quiz.score)) / 2;
+        reasons.push(`last quiz ${Math.round(Number(quiz.score))}%`);
+      }
+      if (pendingCount) {
+        score += pendingCount * 6;
+        reasons.push(`${pendingCount} pending task${pendingCount === 1 ? "" : "s"}`);
+      }
+      return { name: s.name, score, reason: reasons.slice(0, 2).join(" · ") || "keep the streak going" };
+    });
+    return scored.sort((a, b) => b.score - a.score).slice(0, 2);
+  }, [subjects, profile, upcomingExams, quizzes, pending, now]);
+
   return (
     <AppShell>
       <header className="animate-rise surface-card mb-5 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 p-5">
@@ -123,12 +167,55 @@ function Home() {
       </header>
 
       {isLoading ? (
-        <div className="space-y-3">
-          <SkeletonCard />
-          <SkeletonCard />
-        </div>
+        <SkeletonBlock rows={3} />
       ) : (
         <>
+          <section className="card-highlight animate-pop mb-5 rounded-3xl border p-5 shadow-sm">
+            <div className="flex items-center justify-between gap-3">
+              <p className="flex items-center gap-2 text-sm font-semibold text-primary">
+                <Sparkles className="size-4" /> AI Daily Quick Summary
+              </p>
+              <span className="flex items-center gap-1 rounded-full bg-primary/12 px-2.5 py-1 text-[11px] font-semibold text-primary">
+                <Flame className="size-3.5" /> {streak}d
+              </span>
+            </div>
+
+            <p className="mt-3 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+              Today's top focus
+            </p>
+            {focus.length ? (
+              <ul className="mt-2 space-y-2">
+                {focus.map((f, i) => (
+                  <li key={f.name} className="flex items-start gap-2.5">
+                    <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
+                      {i + 1}
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block truncate text-sm font-semibold">
+                        {subjectIcon(f.name)} {f.name}
+                      </span>
+                      <span className="block truncate text-[11px] text-muted-foreground">{f.reason}</span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="mt-2 text-xs text-muted-foreground">
+                Pick your subjects in My Subjects and the AI will highlight what to study first.
+              </p>
+            )}
+
+            <div className="mt-4">
+              <div className="flex items-center justify-between text-[11px] font-medium text-muted-foreground">
+                <span>Daily goal</span>
+                <span className="tabular-nums">
+                  {studiedToday}/{dailyGoalMinutes} min
+                </span>
+              </div>
+              <Progress value={goalPct} className="mt-1.5 h-2" />
+            </div>
+          </section>
+
           <div className="animate-rise surface-card mb-5 p-5">
             <div className="flex items-center justify-between gap-3">
               <div>
@@ -217,6 +304,9 @@ function Home() {
               ))}
             </ul>
           )}
+
+          <h2 className="mb-3 mt-6 text-sm font-semibold text-muted-foreground">Share your progress</h2>
+          <StudyReportActions />
         </>
       )}
     </AppShell>
