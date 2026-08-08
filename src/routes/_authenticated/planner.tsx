@@ -3,7 +3,8 @@ import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { CalendarRange, Check, GitCompareArrows, History, Lightbulb, Plus, Sparkles, Trash2 } from "lucide-react";
 import { toast } from "sonner";
-import { AppShell, EmptyState, PageHeader } from "@/components/app/AppShell";
+import { AppShell, EmptyState, PageHeader, SkeletonBlock } from "@/components/app/AppShell";
+import { StudyReportActions } from "@/components/app/StudyReportActions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -159,7 +160,9 @@ function Planner() {
             {busy ? "Building your plan..." : latestPlan ? "Regenerate weekly plan" : "Generate weekly plan"}
           </Button>
 
-          {latestPlan ? (
+          {busy ? <SkeletonBlock rows={3} /> : null}
+
+          {latestPlan && !busy ? (
             <>
               <p className="surface-card p-4 text-sm text-muted-foreground">{latestPlan.summary}</p>
 
@@ -229,8 +232,9 @@ function Planner() {
                   </Link>
                 </Button>
               </div>
+              <StudyReportActions />
             </>
-          ) : (
+          ) : busy ? null : (
             <EmptyState
               icon={<CalendarRange className="size-5" />}
               title="No plan yet"
