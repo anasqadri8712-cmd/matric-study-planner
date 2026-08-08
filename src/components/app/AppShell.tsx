@@ -107,5 +107,24 @@ export function CountBadge({ count, className }: { count: number; className?: st
 }
 
 export function SkeletonCard() {
-  return <div className="surface-card h-24 animate-pulse bg-muted/40" />;
+  return <div className="surface-card shimmer h-24 bg-muted/40" />;
+}
+
+export function SkeletonLine({ className }: { className?: string }) {
+  return <div className={cn("shimmer h-3 rounded-full bg-muted/60", className)} />;
+}
+
+/** Rich shimmer placeholder used while AI content or lists load. */
+export function SkeletonBlock({ rows = 3 }: { rows?: number }) {
+  return (
+    <div className="space-y-3">
+      {Array.from({ length: rows }).map((_, i) => (
+        <div key={i} className="surface-card space-y-3 p-4">
+          <SkeletonLine className="w-1/3" />
+          <SkeletonLine className="w-full" />
+          <SkeletonLine className="w-2/3" />
+        </div>
+      ))}
+    </div>
+  );
 }
