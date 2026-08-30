@@ -17,6 +17,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedTutorRouteImport } from './routes/_authenticated/tutor'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedRewardsRouteImport } from './routes/_authenticated/rewards'
+import { Route as AuthenticatedReportPreviewRouteImport } from './routes/_authenticated/report-preview'
 import { Route as AuthenticatedQuizRouteImport } from './routes/_authenticated/quiz'
 import { Route as AuthenticatedProgressRouteImport } from './routes/_authenticated/progress'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
@@ -72,6 +73,12 @@ const AuthenticatedRewardsRoute = AuthenticatedRewardsRouteImport.update({
   path: '/rewards',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedReportPreviewRoute =
+  AuthenticatedReportPreviewRouteImport.update({
+    id: '/report-preview',
+    path: '/report-preview',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedQuizRoute = AuthenticatedQuizRouteImport.update({
   id: '/quiz',
   path: '/quiz',
@@ -170,6 +177,7 @@ export interface FileRoutesByFullPath {
   '/profile': typeof AuthenticatedProfileRoute
   '/progress': typeof AuthenticatedProgressRoute
   '/quiz': typeof AuthenticatedQuizRoute
+  '/report-preview': typeof AuthenticatedReportPreviewRoute
   '/rewards': typeof AuthenticatedRewardsRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/tutor': typeof AuthenticatedTutorRoute
@@ -194,6 +202,7 @@ export interface FileRoutesByTo {
   '/profile': typeof AuthenticatedProfileRoute
   '/progress': typeof AuthenticatedProgressRoute
   '/quiz': typeof AuthenticatedQuizRoute
+  '/report-preview': typeof AuthenticatedReportPreviewRoute
   '/rewards': typeof AuthenticatedRewardsRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/tutor': typeof AuthenticatedTutorRoute
@@ -220,6 +229,7 @@ export interface FileRoutesById {
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/progress': typeof AuthenticatedProgressRoute
   '/_authenticated/quiz': typeof AuthenticatedQuizRoute
+  '/_authenticated/report-preview': typeof AuthenticatedReportPreviewRoute
   '/_authenticated/rewards': typeof AuthenticatedRewardsRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/tutor': typeof AuthenticatedTutorRoute
@@ -246,6 +256,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/progress'
     | '/quiz'
+    | '/report-preview'
     | '/rewards'
     | '/settings'
     | '/tutor'
@@ -270,6 +281,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/progress'
     | '/quiz'
+    | '/report-preview'
     | '/rewards'
     | '/settings'
     | '/tutor'
@@ -295,6 +307,7 @@ export interface FileRouteTypes {
     | '/_authenticated/profile'
     | '/_authenticated/progress'
     | '/_authenticated/quiz'
+    | '/_authenticated/report-preview'
     | '/_authenticated/rewards'
     | '/_authenticated/settings'
     | '/_authenticated/tutor'
@@ -368,6 +381,13 @@ declare module '@tanstack/react-router' {
       path: '/rewards'
       fullPath: '/rewards'
       preLoaderRoute: typeof AuthenticatedRewardsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/report-preview': {
+      id: '/_authenticated/report-preview'
+      path: '/report-preview'
+      fullPath: '/report-preview'
+      preLoaderRoute: typeof AuthenticatedReportPreviewRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/quiz': {
@@ -490,6 +510,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedProgressRoute: typeof AuthenticatedProgressRoute
   AuthenticatedQuizRoute: typeof AuthenticatedQuizRoute
+  AuthenticatedReportPreviewRoute: typeof AuthenticatedReportPreviewRoute
   AuthenticatedRewardsRoute: typeof AuthenticatedRewardsRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedTutorRoute: typeof AuthenticatedTutorRoute
@@ -511,6 +532,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedProgressRoute: AuthenticatedProgressRoute,
   AuthenticatedQuizRoute: AuthenticatedQuizRoute,
+  AuthenticatedReportPreviewRoute: AuthenticatedReportPreviewRoute,
   AuthenticatedRewardsRoute: AuthenticatedRewardsRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedTutorRoute: AuthenticatedTutorRoute,
