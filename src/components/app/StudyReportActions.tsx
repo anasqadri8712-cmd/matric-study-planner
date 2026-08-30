@@ -38,7 +38,7 @@ export function StudyReportActions({ compact = false }: { compact?: boolean }) {
   }
 
   return (
-    <div className={compact ? "grid grid-cols-2 gap-3" : "surface-card space-y-3 p-4"}>
+    <div className={compact ? "space-y-3" : "surface-card space-y-3 p-4"}>
       {compact ? null : (
         <div className="flex items-center gap-3">
           <span className="flex size-10 items-center justify-center rounded-2xl bg-primary/12 text-primary">
