@@ -65,6 +65,12 @@ export function StudyReportActions({ compact = false }: { compact?: boolean }) {
           {busy === "share" ? "Preparing..." : "Share"}
         </Button>
       </div>
+      <Button asChild variant="ghost" className="press h-11 w-full rounded-2xl text-primary">
+        <Link to="/report-preview">
+          <Eye className="mr-1 size-4" /> Preview report
+        </Link>
+      </Button>
+
     </div>
   );
 }
