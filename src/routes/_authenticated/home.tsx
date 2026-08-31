@@ -13,8 +13,11 @@ import {
   Trophy,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { AppShell, CountBadge, SkeletonBlock } from "@/components/app/AppShell";
+import { AppShell, CountBadge, SkeletonBlock, EmptyState } from "@/components/app/AppShell";
+import { LogoLockup } from "@/components/app/Logo";
+import { ProgressRing } from "@/components/app/ProgressRing";
 import { StudyReportActions } from "@/components/app/StudyReportActions";
+
 import { useSession } from "@/lib/session";
 import { getGreeting, formatToday } from "@/lib/greeting";
 import { useExams, useProfile, useQuizzes, useSessions, useSubjects, useTasks } from "@/lib/data";
