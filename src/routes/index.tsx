@@ -1,9 +1,11 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
-import { ArrowRight, BrainCircuit, CalendarCheck, Sparkles } from "lucide-react";
+import { ArrowRight, CalendarCheck, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { LogoLockup } from "@/components/app/Logo";
 import { useSession } from "@/lib/session";
 import heroImage from "@/assets/welcome-hero.jpg";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
