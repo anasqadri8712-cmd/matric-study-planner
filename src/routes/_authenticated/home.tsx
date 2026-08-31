@@ -149,26 +149,25 @@ function Home() {
 
   return (
     <AppShell>
-      <header className="animate-rise surface-card mb-5 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 p-5">
+      <header className="animate-rise glass-panel mb-6 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4 p-6">
         <div className="min-w-0">
-          <h1 className="truncate text-2xl font-bold leading-tight">AI Study Planner</h1>
-          <p className="mt-1.5 text-xs font-medium text-muted-foreground">
+          <LogoLockup compact />
+          <p className="mt-4 text-xs font-medium tracking-normal text-muted-foreground">
             {greeting.text} {greeting.emoji}
           </p>
-          <p className="mt-0.5 truncate text-base font-semibold">Hi, {firstName}</p>
+          <p className="mt-0.5 truncate font-display text-xl font-bold tracking-tight">Hi, {firstName}</p>
           <p className="mt-2 text-xs text-muted-foreground">
             {today.day} · {today.date}
           </p>
           <p className="text-xs font-semibold tabular-nums text-primary">{clock}</p>
         </div>
-        <span className="gradient-primary flex size-11 shrink-0 items-center justify-center rounded-2xl text-primary-foreground">
-          <Sparkles className="size-5" />
-        </span>
+        <ProgressRing value={goalPct} size={78} stroke={8} tone="success" sublabel="Goal" />
       </header>
 
       {isLoading ? (
         <SkeletonBlock rows={3} />
       ) : (
+
         <>
           <section className="card-highlight animate-pop mb-5 rounded-3xl border p-5 shadow-sm">
             <div className="flex items-center justify-between gap-3">
