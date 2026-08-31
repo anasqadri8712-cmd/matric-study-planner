@@ -2,6 +2,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { BookOpen, FileText, Home, ListTodo, User } from "lucide-react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { EmptyArt } from "@/components/app/EmptyArt";
 
 const NAV = [
   { to: "/home", label: "Home", icon: Home },
@@ -15,11 +16,20 @@ export function AppShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="mx-auto w-full max-w-lg px-5 pt-6 pb-28">{children}</div>
+    <div className="relative min-h-screen bg-background">
+      {/* ambient brand light */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-x-0 top-0 -z-10 h-72 opacity-70"
+        style={{
+          background:
+            "radial-gradient(70% 100% at 50% 0%, color-mix(in oklab, var(--primary) 16%, transparent), transparent 70%)",
+        }}
+      />
+      <div className="mx-auto w-full max-w-lg px-5 pt-7 pb-32 sm:px-7">{children}</div>
 
-      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/85 backdrop-blur-xl">
-        <ul className="mx-auto grid max-w-lg grid-cols-5 px-1 py-2">
+      <nav className="fixed inset-x-0 bottom-0 z-40 px-3 pb-[max(0.6rem,env(safe-area-inset-bottom))]">
+        <ul className="glass-panel mx-auto grid max-w-lg grid-cols-5 rounded-3xl px-1.5 py-2">
           {NAV.map(({ to, label, icon: Icon }) => {
             const active = pathname === to || pathname.startsWith(`${to}/`);
             return (
@@ -27,17 +37,17 @@ export function AppShell({ children }: { children: ReactNode }) {
                 <Link
                   to={to}
                   className={cn(
-                    "press flex flex-col items-center gap-1 rounded-xl py-2 text-[10px] font-medium",
+                    "press flex flex-col items-center gap-1 rounded-2xl py-1.5 text-[10px] font-semibold tracking-tight",
                     active ? "text-primary" : "text-muted-foreground hover:text-foreground",
                   )}
                 >
                   <span
                     className={cn(
-                      "flex size-9 items-center justify-center rounded-xl transition-colors",
-                      active && "bg-primary/12",
+                      "flex size-9 items-center justify-center rounded-2xl transition-all duration-300",
+                      active && "gradient-primary glow-shadow text-primary-foreground",
                     )}
                   >
-                    <Icon className="size-[18px]" strokeWidth={active ? 2.4 : 1.8} />
+                    <Icon className="size-[18px]" strokeWidth={1.75} />
                   </span>
                   {label}
                 </Link>
@@ -60,27 +70,46 @@ export function PageHeader({
   action?: ReactNode;
 }) {
   return (
-    <header className="animate-rise mb-6 flex items-start justify-between gap-3">
-      <div>
-        <h1 className="text-2xl font-semibold">{title}</h1>
-        {subtitle ? <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p> : null}
+    <header className="animate-rise mb-7 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4">
+      <div className="min-w-0">
+        <h1 className="truncate font-display text-[26px] font-bold tracking-tight">{title}</h1>
+        {subtitle ? (
+          <p className="mt-1.5 text-sm leading-snug text-muted-foreground">{subtitle}</p>
+        ) : null}
       </div>
       {action}
     </header>
   );
 }
 
-export function EmptyState({ icon, title, description }: { icon: ReactNode; title: string; description: string }) {
+export function EmptyState({
+  icon,
+  title,
+  description,
+  art = "tasks",
+  action,
+}: {
+  icon?: ReactNode;
+  title: string;
+  description: string;
+  art?: "tasks" | "notes" | "plan" | "search" | "rewards";
+  action?: ReactNode;
+}) {
   return (
-    <div className="surface-card flex flex-col items-center gap-3 px-6 py-12 text-center">
-      <span className="flex size-12 items-center justify-center rounded-2xl bg-primary/12 text-primary">
-        {icon}
-      </span>
-      <p className="font-semibold">{title}</p>
-      <p className="max-w-xs text-sm text-muted-foreground">{description}</p>
+    <div className="surface-card animate-pop flex flex-col items-center gap-3 px-6 py-10 text-center">
+      <EmptyArt variant={art} className="animate-ring-pulse" />
+      {icon ? (
+        <span className="flex size-11 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+          {icon}
+        </span>
+      ) : null}
+      <p className="font-display text-base font-bold tracking-tight">{title}</p>
+      <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">{description}</p>
+      {action}
     </div>
   );
 }
+
 
 export function Loader({ label = "Loading" }: { label?: string }) {
   return (
