@@ -1,9 +1,11 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
-import { ArrowRight, BrainCircuit, CalendarCheck, Sparkles } from "lucide-react";
+import { ArrowRight, CalendarCheck, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { LogoLockup } from "@/components/app/Logo";
 import { useSession } from "@/lib/session";
 import heroImage from "@/assets/welcome-hero.jpg";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -33,24 +35,30 @@ function Welcome() {
   }, [loading, session, navigate]);
 
   return (
-    <main className="h-[100dvh] overflow-hidden bg-background">
-      <div className="mx-auto flex h-full w-full max-w-lg flex-col px-6 py-[max(1rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))]">
-        <div className="animate-rise flex shrink-0 items-center gap-2">
-          <span className="gradient-primary flex size-8 items-center justify-center rounded-xl text-primary-foreground">
-            <BrainCircuit className="size-4" />
-          </span>
-          <span className="font-display text-sm font-semibold tracking-tight">AI Study Planner</span>
+    <main className="relative h-[100dvh] overflow-hidden bg-background">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-80"
+        style={{
+          background:
+            "radial-gradient(75% 100% at 50% 0%, color-mix(in oklab, var(--primary) 18%, transparent), transparent 72%)",
+        }}
+      />
+      <div className="relative mx-auto flex h-full w-full max-w-lg flex-col px-6 py-[max(1rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))]">
+        <div className="animate-rise shrink-0">
+          <LogoLockup compact />
         </div>
 
-        <div className="animate-rise mx-auto mt-3 w-full max-w-[220px] shrink overflow-hidden rounded-3xl border border-border">
+        <div className="animate-rise glass-panel mx-auto mt-3 w-full max-w-[220px] shrink overflow-hidden rounded-3xl p-1.5">
           <img
             src={heroImage}
             alt="Student studying with an AI assistant organising their timetable"
             width={1024}
             height={1024}
-            className="aspect-square w-full object-cover"
+            className="aspect-square w-full rounded-[1.15rem] object-cover"
           />
         </div>
+
 
         <div className="animate-rise mt-4 min-h-0 flex-1">
           <h1 className="text-[clamp(1.35rem,6vw,1.9rem)] font-semibold leading-tight">
