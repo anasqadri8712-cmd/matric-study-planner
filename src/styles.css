@@ -307,3 +307,58 @@
     var(--color-card) 72%
   );
 }
+
+@utility gradient-brand {
+  background-image: var(--gradient-brand, var(--gradient-primary));
+}
+
+@utility elevated-shadow {
+  box-shadow: var(--shadow-elevated);
+}
+
+@utility glass-panel {
+  background-color: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-2xl);
+  backdrop-filter: blur(24px) saturate(160%);
+  box-shadow: var(--shadow-card);
+}
+
+@utility lift {
+  transition:
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+  &:hover {
+    transform: scale(1.01) translateY(-2px);
+    box-shadow: var(--shadow-elevated);
+    border-color: color-mix(in oklab, var(--color-primary) 26%, var(--color-border));
+  }
+  &:active {
+    transform: scale(0.985);
+  }
+}
+
+@layer base {
+  @keyframes ring-pulse {
+    0%,
+    100% {
+      opacity: 0.55;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+  .animate-ring-pulse {
+    animation: ring-pulse 2.4s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lift:hover {
+      transform: none;
+    }
+    .animate-ring-pulse {
+      animation: none;
+    }
+  }
+}
