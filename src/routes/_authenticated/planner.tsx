@@ -3,7 +3,8 @@ import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { CalendarRange, Check, GitCompareArrows, History, Lightbulb, Plus, Sparkles, Trash2 } from "lucide-react";
 import { toast } from "sonner";
-import { AppShell, EmptyState, PageHeader, SkeletonBlock } from "@/components/app/AppShell";
+import { AppShell, EmptyState, SkeletonBlock } from "@/components/app/AppShell";
+import { ProgressRing } from "@/components/app/ProgressRing";
 import { StudyReportActions } from "@/components/app/StudyReportActions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -142,7 +143,13 @@ function Planner() {
 
   return (
     <AppShell>
-      <PageHeader title="Planner" subtitle="Your weekly plan and daily tasks" />
+      <div className="glass-panel animate-rise mb-1 rounded-3xl p-6">
+        <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-primary">
+          <Sparkles strokeWidth={1.75} className="size-4" /> AI Planner Studio
+        </p>
+        <h1 className="mt-2 text-2xl font-display font-bold tracking-tight text-gradient">Planner</h1>
+        <p className="mt-1 text-sm leading-relaxed text-muted-foreground">Your weekly plan and daily tasks, tuned by AI.</p>
+      </div>
 
       <Tabs defaultValue="plan">
         <TabsList className="grid w-full grid-cols-2 rounded-2xl p-1">
@@ -155,12 +162,18 @@ function Planner() {
         </TabsList>
 
         <TabsContent value="plan" className="mt-5 space-y-4">
-          <Button onClick={makePlan} disabled={busy} className="press h-13 w-full rounded-2xl">
-            <Sparkles className="mr-1 size-4" />
+          <Button onClick={makePlan} disabled={busy} className="press h-13 w-full rounded-2xl gradient-primary">
+            <Sparkles strokeWidth={1.75} className="mr-1 size-4" />
             {busy ? "Building your plan..." : latestPlan ? "Regenerate weekly plan" : "Generate weekly plan"}
           </Button>
 
-          {busy ? <SkeletonBlock rows={3} /> : null}
+          {busy ? (
+            <div className="glass-panel animate-rise flex flex-col items-center gap-3 rounded-3xl p-8 text-center">
+              <ProgressRing value={72} size={88} tone="primary" label="AI" sublabel="Thinking" className="animate-ring-pulse" />
+              <p className="text-sm font-medium">Crafting your weekly timetable…</p>
+              <SkeletonBlock rows={3} />
+            </div>
+          ) : null}
 
           {latestPlan && !busy ? (
             <>
@@ -169,7 +182,7 @@ function Planner() {
               {latestPlan.why?.length ? (
                 <div className="surface-card animate-rise border-primary/40 p-4">
                   <p className="flex items-center gap-2 text-sm font-semibold text-primary">
-                    <Lightbulb className="size-4" /> Why this plan?
+                    <Lightbulb strokeWidth={1.75} className="size-4" /> Why this plan?
                   </p>
                   <ul className="mt-2 space-y-1.5 text-sm text-muted-foreground">
                     {latestPlan.why.map((w) => (
@@ -223,12 +236,12 @@ function Planner() {
               <div className="grid grid-cols-2 gap-3">
                 <Button asChild variant="outline" className="press h-12 w-full rounded-2xl">
                   <Link to="/plan-history">
-                    <History className="mr-1 size-4" /> History
+                    <History strokeWidth={1.75} className="mr-1 size-4" /> History
                   </Link>
                 </Button>
                 <Button asChild variant="outline" className="press h-12 w-full rounded-2xl">
                   <Link to="/compare-plans">
-                    <GitCompareArrows className="mr-1 size-4" /> Compare
+                    <GitCompareArrows strokeWidth={1.75} className="mr-1 size-4" /> Compare
                   </Link>
                 </Button>
               </div>
@@ -236,9 +249,10 @@ function Planner() {
             </>
           ) : busy ? null : (
             <EmptyState
-              icon={<CalendarRange className="size-5" />}
+              icon={<CalendarRange strokeWidth={1.75} className="size-5" />}
               title="No plan yet"
               description="Generate a 7-day timetable built around your class, weak subjects and free hours."
+              art="plan"
             />
           )}
         </TabsContent>
@@ -247,7 +261,7 @@ function Planner() {
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button variant="outline" className="press h-12 w-full rounded-2xl">
-                <Plus className="mr-1 size-4" /> Add task
+                <Plus strokeWidth={1.75} className="mr-1 size-4" /> Add task
               </Button>
             </DialogTrigger>
             <DialogContent className="rounded-3xl">
@@ -325,10 +339,17 @@ function Planner() {
               icon={<Check className="size-5" />}
               title="Nothing planned"
               description="Add your first task and tick it off as you study."
+              art="tasks"
             />
           ) : (
             tasks.map((task) => (
-              <div key={task.id} className="surface-card flex items-center gap-3 p-4">
+              <div
+                key={task.id}
+                className={cn(
+                  "surface-card lift flex items-center gap-3 border-l-4 p-4",
+                  task.completed ? "border-l-success" : "border-l-primary/50",
+                )}
+              >
                 <button
                   onClick={() => updateTask.mutate({ id: task.id, patch: { completed: !task.completed } })}
                   aria-label="Toggle task"
@@ -337,7 +358,7 @@ function Planner() {
                     task.completed ? "border-success bg-success text-background" : "border-border",
                   )}
                 >
-                  {task.completed ? <Check className="size-3.5" /> : null}
+                  {task.completed ? <Check strokeWidth={1.75} className="size-3.5" /> : null}
                 </button>
                 <div className="flex-1">
                   <p className={cn("text-sm font-medium", task.completed && "text-muted-foreground line-through")}>
@@ -352,7 +373,7 @@ function Planner() {
                   aria-label="Delete task"
                   className="press text-muted-foreground"
                 >
-                  <Trash2 className="size-4" />
+                  <Trash2 strokeWidth={1.75} className="size-4" />
                 </button>
               </div>
             ))

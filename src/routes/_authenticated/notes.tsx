@@ -91,7 +91,7 @@ function NotesPage() {
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button size="icon" className="press size-11 rounded-2xl">
-                <Plus className="size-5" />
+                <Plus className="size-5" strokeWidth={1.75} />
               </Button>
             </DialogTrigger>
             <DialogContent className="rounded-3xl">
@@ -156,7 +156,7 @@ function NotesPage() {
       />
 
       <div className="relative mb-4">
-        <Search className="absolute top-1/2 left-4 size-4 -translate-y-1/2 text-muted-foreground" />
+        <Search className="absolute top-1/2 left-4 size-4 -translate-y-1/2 text-muted-foreground" strokeWidth={1.75} />
         <Input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
@@ -167,17 +167,23 @@ function NotesPage() {
 
       {visible.length === 0 ? (
         <EmptyState
-          icon={<FileText className="size-5" />}
+          icon={<FileText className="size-5" strokeWidth={1.75} />}
           title={notes.length ? "No matching notes" : "No notes yet"}
           description="Save chapter notes and let AI turn them into short revision points."
+          art="notes"
         />
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-4">
           {visible.map((n) => (
-            <article key={n.id} className="surface-card animate-rise p-4">
+            <article key={n.id} className="surface-card card-highlight lift animate-rise p-6">
               <div className="flex items-start gap-3">
                 <div className="flex-1">
-                  <h2 className="font-semibold">{n.title}</h2>
+                  {n.pinned ? (
+                    <span className="mb-1.5 inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-primary">
+                      <Pin className="size-3" strokeWidth={1.75} /> Pinned
+                    </span>
+                  ) : null}
+                  <h2 className="font-display text-lg font-bold tracking-tight">{n.title}</h2>
                   {n.topic ? <p className="text-xs text-muted-foreground">{n.topic}</p> : null}
                 </div>
                 <button
@@ -185,24 +191,26 @@ function NotesPage() {
                   aria-label={n.pinned ? `Unpin ${n.title}` : `Pin ${n.title}`}
                   className={cn("press", n.pinned ? "text-primary" : "text-muted-foreground")}
                 >
-                  <Pin className="size-4" />
+                  <Pin className="size-4" strokeWidth={1.75} />
                 </button>
                 <button
                   onClick={() => remove.mutate(n.id)}
                   aria-label={`Delete ${n.title}`}
                   className="press text-muted-foreground"
                 >
-                  <Trash2 className="size-4" />
+                  <Trash2 className="size-4" strokeWidth={1.75} />
                 </button>
               </div>
               {n.label && n.label !== "none" ? (
-                <span className="mt-2 inline-block rounded-full bg-primary/12 px-2.5 py-1 text-[11px] font-medium text-primary">
+                <span className="mt-3 inline-block rounded-full bg-primary/12 px-2.5 py-1 text-[11px] font-medium text-primary">
                   {NOTE_LABELS.find((l) => l.value === n.label)?.label ?? n.label}
                 </span>
               ) : null}
-              <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">{n.content || "Empty note"}</p>
+              <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-muted-foreground">
+                {n.content || "Empty note"}
+              </p>
               {n.summary ? (
-                <div className="mt-3 rounded-2xl bg-primary/8 p-3 text-sm whitespace-pre-wrap text-foreground">
+                <div className="mt-4 rounded-2xl bg-primary/8 p-4 text-sm leading-relaxed whitespace-pre-wrap text-foreground">
                   {n.summary}
                 </div>
               ) : null}
@@ -211,9 +219,9 @@ function NotesPage() {
                 size="sm"
                 disabled={busyId === n.id}
                 onClick={() => makeSummary(n.id, n.title, n.content)}
-                className="press mt-3 h-10 rounded-xl"
+                className="press mt-4 h-10 rounded-xl"
               >
-                <Sparkles className="mr-1 size-3.5" />
+                <Sparkles className="mr-1 size-3.5" strokeWidth={1.75} />
                 {busyId === n.id ? "Summarising..." : n.summary ? "Regenerate summary" : "Summarise with AI"}
               </Button>
             </article>

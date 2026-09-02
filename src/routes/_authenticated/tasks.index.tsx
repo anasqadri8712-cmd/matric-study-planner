@@ -130,7 +130,7 @@ function TasksPage() {
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button size="icon" className="press size-11 rounded-2xl">
-                <Plus className="size-5" />
+                <Plus strokeWidth={1.75} className="size-5" />
               </Button>
             </DialogTrigger>
             <DialogContent className="max-h-[85vh] overflow-y-auto rounded-3xl">
@@ -263,7 +263,7 @@ function TasksPage() {
       />
 
       <div className="relative mb-3">
-        <Search className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+        <Search strokeWidth={1.75} className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
         <Input
           value={q}
           onChange={(e) => setQ(e.target.value)}
@@ -316,37 +316,53 @@ function TasksPage() {
         </div>
       ) : filtered.length === 0 ? (
         <EmptyState
-          icon={<ListTodo className="size-6" />}
+          icon={<ListTodo strokeWidth={1.75} className="size-6" />}
           title="No study tasks available yet"
           description="Add a task, or let the AI planner create this week's tasks for you."
+          art="tasks"
         />
       ) : (
         <ul className="space-y-3">
-          {filtered.map((t) => (
-            <li key={t.id}>
-              <Link
-                to="/tasks/$taskId"
-                params={{ taskId: t.id }}
-                className="surface-card press flex items-center gap-3 p-4"
-              >
-                <span className="text-xl">{subjectIcon(t.subject)}</span>
-                <div className="min-w-0 flex-1">
-                  <p className={cn("truncate font-semibold", t.status === "completed" && "line-through opacity-60")}>
-                    {t.title}
-                  </p>
-                  <p className="truncate text-xs text-muted-foreground">
-                    {[t.subject, t.topic, KIND_LABEL[t.kind] ?? t.kind].filter(Boolean).join(" · ")}
-                  </p>
-                  <p className="mt-1 text-[11px] text-muted-foreground">
-                    ⏱ {t.estimated_minutes} min · {t.difficulty}
-                  </p>
-                </div>
-                <span className={cn("text-xs font-medium", STATUS_META[t.status]?.className)}>
-                  {STATUS_META[t.status]?.dot}
-                </span>
-              </Link>
-            </li>
-          ))}
+          {filtered.map((t) => {
+            const statusMeta = STATUS_META[t.status];
+            const accent =
+              t.status === "completed" ? "border-l-success" : t.status === "in_progress" ? "border-l-warning" : "border-l-border";
+            return (
+              <li key={t.id}>
+                <Link
+                  to="/tasks/$taskId"
+                  params={{ taskId: t.id }}
+                  className={cn("surface-card lift flex items-center gap-3 border-l-4 p-4", accent)}
+                >
+                  <span className="text-xl">{subjectIcon(t.subject)}</span>
+                  <div className="min-w-0 flex-1">
+                    <p className={cn("truncate font-semibold", t.status === "completed" && "line-through opacity-60")}>
+                      {t.title}
+                    </p>
+                    <p className="truncate text-xs text-muted-foreground">
+                      {[t.subject, t.topic, KIND_LABEL[t.kind] ?? t.kind].filter(Boolean).join(" · ")}
+                    </p>
+                    <p className="mt-1 text-[11px] text-muted-foreground">
+                      ⏱ {t.estimated_minutes} min · {t.difficulty}
+                    </p>
+                  </div>
+                  <span
+                    className={cn(
+                      "shrink-0 rounded-full border px-2.5 py-1 text-[11px] font-semibold",
+                      statusMeta?.className,
+                      t.status === "completed"
+                        ? "border-success/40 bg-success/10"
+                        : t.status === "in_progress"
+                          ? "border-warning/40 bg-warning/10"
+                          : "border-border bg-muted/40",
+                    )}
+                  >
+                    {statusMeta?.dot} {statusMeta?.label}
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       )}
     </AppShell>

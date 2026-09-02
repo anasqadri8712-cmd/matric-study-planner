@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { LogoLockup } from "@/components/app/Logo";
 import { friendlyAuthError, validateSignupPassword } from "@/lib/validation";
 
 export const Route = createFileRoute("/reset-password")({
@@ -47,13 +48,24 @@ function ResetPassword() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-background px-5">
-      <form onSubmit={submit} className="surface-card animate-rise w-full max-w-sm space-y-5 p-6">
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-5">
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-x-0 top-0 -z-10 h-96 opacity-80"
+        style={{
+          background:
+            "radial-gradient(70% 100% at 50% 0%, color-mix(in oklab, var(--primary) 20%, transparent), transparent 70%)",
+        }}
+      />
+      <form onSubmit={submit} className="glass-panel animate-rise elevated-shadow w-full max-w-sm space-y-5 p-7 sm:p-8">
+        <div className="flex justify-center">
+          <LogoLockup compact />
+        </div>
         <div className="flex size-12 items-center justify-center rounded-2xl bg-primary/12 text-primary">
-          <ShieldCheck className="size-6" />
+          <ShieldCheck className="size-6" strokeWidth={1.75} />
         </div>
         <div>
-          <h1 className="text-xl font-semibold">Set a new password</h1>
+          <h1 className="font-display text-xl font-bold tracking-tight">Set a new password</h1>
           <p className="mt-1 text-sm text-muted-foreground">Choose a strong password you will remember.</p>
         </div>
         <div className="space-y-2">
@@ -73,7 +85,7 @@ function ResetPassword() {
               aria-label={show ? "Hide password" : "Show password"}
               className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground"
             >
-              {show ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+              {show ? <EyeOff className="size-4" strokeWidth={1.75} /> : <Eye className="size-4" strokeWidth={1.75} />}
             </button>
           </div>
         </div>
@@ -89,7 +101,7 @@ function ResetPassword() {
           />
         </div>
         {error ? <p className="text-sm text-destructive">{error}</p> : null}
-        <Button type="submit" disabled={busy} className="h-12 w-full rounded-xl">
+        <Button type="submit" disabled={busy} className="press glow-shadow h-12 w-full rounded-xl">
           {busy ? "Updating..." : "Update password"}
         </Button>
       </form>

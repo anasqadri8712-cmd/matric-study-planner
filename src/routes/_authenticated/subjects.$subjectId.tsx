@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo } from "react";
 import { ArrowLeft, ListTodo } from "lucide-react";
 import { AppShell, CountBadge, EmptyState, Loader } from "@/components/app/AppShell";
-import { Progress } from "@/components/ui/progress";
+import { ProgressRing } from "@/components/app/ProgressRing";
 import { useSession } from "@/lib/session";
 import { useAllSubjects, useTasks } from "@/lib/data";
 import { KIND_LABEL, STATUS_META, subjectIcon } from "@/lib/matric";
@@ -75,26 +75,31 @@ function SubjectDetail() {
         onClick={() => navigate({ to: "/subjects" })}
         className="press mb-4 flex items-center gap-2 text-sm text-muted-foreground"
       >
-        <ArrowLeft className="size-4" /> Subjects
+        <ArrowLeft className="size-4" strokeWidth={1.75} /> Subjects
       </button>
 
-      <div className="animate-rise surface-card mb-4 p-5">
-        <div className="flex items-center gap-3">
+      <div
+        className="animate-rise surface-card card-highlight elevated-shadow relative mb-4 overflow-hidden p-6"
+        style={{
+          background: `radial-gradient(120% 140% at 0% 0%, ${subject.color}1f, transparent 60%)`,
+        }}
+      >
+        <div className="flex items-center gap-4">
           <span
-            className="flex size-12 items-center justify-center rounded-2xl text-2xl"
-            style={{ backgroundColor: `${subject.color}22` }}
+            className="flex size-14 shrink-0 items-center justify-center rounded-2xl text-3xl"
+            style={{ backgroundColor: `${subject.color}26` }}
           >
             {subject.icon || subjectIcon(subject.name)}
           </span>
-          <div>
-            <h1 className="text-xl font-semibold">{subject.name}</h1>
+          <div className="min-w-0 flex-1">
+            <h1 className="truncate font-display text-2xl font-bold tracking-tight">{subject.name}</h1>
             <p className="text-xs text-muted-foreground">
               Chapters {subject.completed_chapters}/{subject.total_chapters} · {chapterPct}% covered
             </p>
           </div>
+          <ProgressRing value={taskPct} size={72} stroke={7} sublabel="done" />
         </div>
-        <Progress value={taskPct} className="mt-4" />
-        <div className="mt-4 grid grid-cols-4 gap-2 text-center">
+        <div className="mt-5 grid grid-cols-4 gap-2 text-center">
           <Tile label="Total" value={total} />
           <Tile label="Done" value={done} />
           <Tile label="Pending" value={pending} />
@@ -104,7 +109,7 @@ function SubjectDetail() {
 
       {total === 0 ? (
         <EmptyState
-          icon={<ListTodo className="size-6" />}
+          icon={<ListTodo className="size-6" strokeWidth={1.75} />}
           title="No study tasks available yet"
           description={`Add tasks for ${subject.name} or generate a plan and the AI will fill this page.`}
         />
@@ -126,7 +131,7 @@ function SubjectDetail() {
                       <Link
                         to="/tasks/$taskId"
                         params={{ taskId: t.id }}
-                        className="surface-card press flex items-center gap-3 p-4"
+                        className="surface-card lift press flex items-center gap-3 p-4"
                       >
                         <div className="min-w-0 flex-1">
                           <p

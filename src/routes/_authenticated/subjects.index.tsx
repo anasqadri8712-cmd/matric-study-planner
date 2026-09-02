@@ -3,10 +3,10 @@ import { useMemo, useState } from "react";
 import { BookOpen, ChevronRight, Plus, Search } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell, CountBadge, EmptyState, PageHeader, SkeletonCard } from "@/components/app/AppShell";
+import { ProgressRing } from "@/components/app/ProgressRing";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useSession } from "@/lib/session";
 import { useAllSubjects, useInsert, useSubjects, useTasks } from "@/lib/data";
@@ -83,7 +83,7 @@ function Subjects() {
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button size="icon" className="press size-11 rounded-2xl">
-                <Plus className="size-5" />
+                <Plus className="size-5" strokeWidth={1.75} />
               </Button>
             </DialogTrigger>
             <DialogContent className="rounded-3xl">
@@ -126,7 +126,7 @@ function Subjects() {
       />
 
       <div className="relative mb-4">
-        <Search className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+        <Search className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" strokeWidth={1.75} />
         <Input
           value={q}
           onChange={(e) => setQ(e.target.value)}
@@ -154,7 +154,7 @@ function Subjects() {
         </div>
       ) : filtered.length === 0 ? (
         <EmptyState
-          icon={<BookOpen className="size-6" />}
+          icon={<BookOpen className="size-6" strokeWidth={1.75} />}
           title="No subjects yet"
           description="Add your matric subjects to start tracking chapters, tasks and progress."
         />
@@ -169,10 +169,19 @@ function Subjects() {
               : Math.round((s.completed_chapters / Math.max(1, s.total_chapters)) * 100);
             return (
               <li key={s.id}>
-                <Link to="/subjects/$subjectId" params={{ subjectId: s.id }} className="surface-card press block p-4">
+                <Link
+                  to="/subjects/$subjectId"
+                  params={{ subjectId: s.id }}
+                  className="surface-card lift press relative block overflow-hidden p-4 pl-5"
+                >
+                  <span
+                    aria-hidden
+                    className="absolute inset-y-0 left-0 w-1.5 rounded-r-full"
+                    style={{ background: `linear-gradient(180deg, ${s.color}, color-mix(in oklab, ${s.color} 40%, transparent))` }}
+                  />
                   <div className="flex items-center gap-3">
                     <span
-                      className="flex size-11 items-center justify-center rounded-2xl text-xl"
+                      className="flex size-11 shrink-0 items-center justify-center rounded-2xl text-xl"
                       style={{ backgroundColor: `${s.color}22` }}
                     >
                       {s.icon || subjectIcon(s.name)}
@@ -182,11 +191,13 @@ function Subjects() {
                         {s.name}
                         <CountBadge count={pending} />
                       </p>
-                      <p className="text-xs text-muted-foreground">Progress {pct}%</p>
+                      <p className="text-xs text-muted-foreground">
+                        {done}/{subjectTasks.length || s.total_chapters} complete
+                      </p>
                     </div>
-                    <ChevronRight className="size-4 text-muted-foreground" />
+                    <ProgressRing value={pct} size={52} stroke={5} />
+                    <ChevronRight className="size-4 shrink-0 text-muted-foreground" strokeWidth={1.75} />
                   </div>
-                  <Progress value={pct} className="mt-3" />
                 </Link>
               </li>
             );
