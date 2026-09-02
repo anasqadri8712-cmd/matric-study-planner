@@ -4,9 +4,9 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, BookOpen, CheckCircle2, Clock, Play, Sparkles, Target } from "lucide-react";
 import { toast } from "sonner";
-import { AppShell, Loader } from "@/components/app/AppShell";
+import { AppShell, EmptyState, Loader } from "@/components/app/AppShell";
+import { ProgressRing } from "@/components/app/ProgressRing";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import { useSession } from "@/lib/session";
 import { useInsert, useProfile, useSubjects, useTasks, useUpdate } from "@/lib/data";
 import { generateQuiz, type QuizQuestion } from "@/lib/ai.functions";
@@ -70,12 +70,17 @@ function TaskDetail() {
   if (!task) {
     return (
       <AppShell>
-        <div className="surface-card p-8 text-center">
-          <p className="font-semibold">This task no longer exists</p>
-          <Link to="/tasks" className="mt-3 inline-block text-sm text-primary">
-            Back to tasks
-          </Link>
-        </div>
+        <EmptyState
+          icon={<Target strokeWidth={1.75} className="size-5" />}
+          title="This task no longer exists"
+          description="It may have been removed. Head back to your task list."
+          art="tasks"
+          action={
+            <Link to="/tasks" className="text-sm font-medium text-primary">
+              Back to tasks
+            </Link>
+          }
+        />
       </AppShell>
     );
   }
@@ -164,7 +169,7 @@ function TaskDetail() {
   return (
     <AppShell>
       <button onClick={() => navigate({ to: "/tasks" })} className="press mb-4 flex items-center gap-2 text-sm text-muted-foreground">
-        <ArrowLeft className="size-4" /> Back
+        <ArrowLeft strokeWidth={1.75} className="size-4" /> Back
       </button>
 
       {stage === "detail" && (
@@ -189,21 +194,31 @@ function TaskDetail() {
             </p>
           </div>
 
-          <Section icon={<BookOpen className="size-4" />} title="Description">
+          <Section icon={<BookOpen strokeWidth={1.75} className="size-4" />} title="Description">
             {task.description || "No extra description added for this task."}
           </Section>
-          <Section icon={<Target className="size-4" />} title="Learning objective">
+          <Section icon={<Target strokeWidth={1.75} className="size-4" />} title="Learning objective">
             {task.objective || `Understand and master ${task.topic || task.title}.`}
           </Section>
-          <Section icon={<Sparkles className="size-4" />} title="Study material">
+          <Section icon={<Sparkles strokeWidth={1.75} className="size-4" />} title="Study material">
             {task.material || "Use your textbook chapter, class notes and past paper questions."}
           </Section>
 
-          <div className="surface-card p-5 text-center">
-            <p className="text-xs uppercase tracking-wide text-muted-foreground">Study timer</p>
-            <p className="mt-1 font-mono text-4xl font-semibold tabular-nums">{formatDuration(seconds)}</p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Saved so far: {task.study_minutes ?? 0} min
+          <div className="surface-card animate-rise p-6 text-center">
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Study timer</p>
+            <div className="mt-4 flex justify-center">
+              <ProgressRing
+                value={Math.min(100, (seconds / (task.estimated_minutes * 60)) * 100)}
+                size={140}
+                stroke={11}
+                tone={running ? "success" : "primary"}
+                label={formatDuration(seconds)}
+                sublabel={running ? "Focusing" : "Paused"}
+                className={running ? "animate-ring-pulse" : ""}
+              />
+            </div>
+            <p className="mt-3 text-xs text-muted-foreground">
+              Saved so far: {task.study_minutes ?? 0} min · Target {task.estimated_minutes} min
             </p>
             <div className="mt-4 grid grid-cols-2 gap-3">
               <Button
@@ -212,18 +227,18 @@ function TaskDetail() {
                 className="press h-12 rounded-xl"
                 disabled={task.status === "completed"}
               >
-                <Play className="mr-1 size-4" /> {running ? "Pause" : "Start task"}
+                <Play strokeWidth={1.75} className="mr-1 size-4" /> {running ? "Pause" : "Start task"}
               </Button>
               <Button
                 onClick={openVerification}
                 className="press h-12 rounded-xl"
                 disabled={task.status === "completed"}
               >
-                <CheckCircle2 className="mr-1 size-4" /> Complete task
+                <CheckCircle2 strokeWidth={1.75} className="mr-1 size-4" /> Complete task
               </Button>
             </div>
             {task.status === "completed" ? (
-              <p className="mt-3 text-xs text-emerald-500">
+              <p className="mt-3 text-xs text-success">
                 Verified with {task.quiz_score ?? 0}/3 quiz score.
               </p>
             ) : (
@@ -245,9 +260,18 @@ function TaskDetail() {
             <Loader label="AI is writing your questions" />
           ) : (
             <>
-              <Progress value={(Object.keys(answers).length / Math.max(1, questions.length)) * 100} />
+              <div className="flex items-center justify-center">
+                <ProgressRing
+                  value={(Object.keys(answers).length / Math.max(1, questions.length)) * 100}
+                  size={72}
+                  stroke={7}
+                  tone="primary"
+                  label={`${Object.keys(answers).length}/${questions.length}`}
+                  sublabel="Answered"
+                />
+              </div>
               {questions.map((q, i) => (
-                <div key={i} className="surface-card space-y-2 p-4">
+                <div key={i} className="surface-card animate-rise space-y-2 p-4">
                   <p className="font-medium">
                     {i + 1}. {q.question}
                   </p>
