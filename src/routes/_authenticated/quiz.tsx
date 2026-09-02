@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { BookOpenCheck, RotateCcw, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell, PageHeader } from "@/components/app/AppShell";
+import { ProgressRing } from "@/components/app/ProgressRing";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -77,7 +78,7 @@ function QuizPage() {
       <PageHeader title="Quiz me" subtitle="Practice MCQs generated for your chapter" />
 
       {!questions ? (
-        <div className="surface-card animate-rise space-y-4 p-5">
+        <div className="glass-panel animate-rise space-y-4 rounded-3xl p-6">
           <div className="space-y-2">
             <Label>Subject</Label>
             <div className="flex flex-wrap gap-2">
@@ -109,13 +110,25 @@ function QuizPage() {
               className="h-12 rounded-xl"
             />
           </div>
-          <Button onClick={start} disabled={busy} className="press h-13 w-full rounded-2xl">
-            <Sparkles className="mr-1 size-4" />
+          <Button onClick={start} disabled={busy} className="press h-13 w-full rounded-2xl gradient-primary">
+            <Sparkles strokeWidth={1.75} className="mr-1 size-4" />
             {busy ? "Writing questions..." : "Generate quiz"}
           </Button>
         </div>
       ) : (
         <div className="space-y-4">
+          {!submitted ? (
+            <div className="flex items-center justify-center">
+              <ProgressRing
+                value={(Object.keys(answers).length / Math.max(1, questions.length)) * 100}
+                size={80}
+                stroke={7}
+                tone="primary"
+                label={`${Object.keys(answers).length}/${questions.length}`}
+                sublabel="Answered"
+              />
+            </div>
+          ) : null}
           {submitted ? (
             <div className="gradient-primary animate-rise rounded-3xl p-5 text-primary-foreground">
               <p className="text-xs opacity-80">Your score</p>
@@ -133,7 +146,7 @@ function QuizPage() {
           ) : null}
 
           {questions.map((q, i) => (
-            <div key={i} className="surface-card animate-rise p-4">
+            <div key={i} className="surface-card lift animate-rise p-4" style={{ animationDelay: `${i * 60}ms` }}>
               <p className="text-sm font-medium">
                 {i + 1}. {q.question}
               </p>
@@ -148,7 +161,7 @@ function QuizPage() {
                       disabled={submitted}
                       onClick={() => setAnswers((a) => ({ ...a, [i]: oi }))}
                       className={cn(
-                        "press w-full rounded-xl border px-4 py-3 text-left text-sm",
+                        "press animate-pop w-full rounded-xl border px-4 py-3 text-left text-sm transition-colors",
                         correct
                           ? "border-success bg-success/12 text-success"
                           : wrong
@@ -157,6 +170,7 @@ function QuizPage() {
                               ? "border-primary bg-primary/12 text-primary"
                               : "border-border",
                       )}
+                      style={{ animationDelay: `${oi * 40}ms` }}
                     >
                       {opt}
                     </button>
@@ -175,7 +189,7 @@ function QuizPage() {
               onClick={() => setQuestions(null)}
               className="press h-12 w-full rounded-2xl"
             >
-              <RotateCcw className="mr-1 size-4" /> New quiz
+              <RotateCcw strokeWidth={1.75} className="mr-1 size-4" /> New quiz
             </Button>
           ) : (
             <Button
@@ -183,7 +197,7 @@ function QuizPage() {
               disabled={Object.keys(answers).length !== questions.length}
               className="press h-13 w-full rounded-2xl"
             >
-              <BookOpenCheck className="mr-1 size-4" /> Submit answers
+              <BookOpenCheck strokeWidth={1.75} className="mr-1 size-4" /> Submit answers
             </Button>
           )}
         </div>
