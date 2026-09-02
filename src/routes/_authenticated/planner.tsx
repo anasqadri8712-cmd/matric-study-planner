@@ -182,7 +182,7 @@ function Planner() {
               {latestPlan.why?.length ? (
                 <div className="surface-card animate-rise border-primary/40 p-4">
                   <p className="flex items-center gap-2 text-sm font-semibold text-primary">
-                    <Lightbulb className="size-4" /> Why this plan?
+                    <Lightbulb strokeWidth={1.75} className="size-4" /> Why this plan?
                   </p>
                   <ul className="mt-2 space-y-1.5 text-sm text-muted-foreground">
                     {latestPlan.why.map((w) => (
@@ -236,12 +236,12 @@ function Planner() {
               <div className="grid grid-cols-2 gap-3">
                 <Button asChild variant="outline" className="press h-12 w-full rounded-2xl">
                   <Link to="/plan-history">
-                    <History className="mr-1 size-4" /> History
+                    <History strokeWidth={1.75} className="mr-1 size-4" /> History
                   </Link>
                 </Button>
                 <Button asChild variant="outline" className="press h-12 w-full rounded-2xl">
                   <Link to="/compare-plans">
-                    <GitCompareArrows className="mr-1 size-4" /> Compare
+                    <GitCompareArrows strokeWidth={1.75} className="mr-1 size-4" /> Compare
                   </Link>
                 </Button>
               </div>
@@ -261,7 +261,7 @@ function Planner() {
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button variant="outline" className="press h-12 w-full rounded-2xl">
-                <Plus className="mr-1 size-4" /> Add task
+                <Plus strokeWidth={1.75} className="mr-1 size-4" /> Add task
               </Button>
             </DialogTrigger>
             <DialogContent className="rounded-3xl">
