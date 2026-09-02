@@ -31,10 +31,10 @@ function PlanHistoryPage() {
       {plans.length > 1 ? (
         <Link
           to="/compare-plans"
-          className="press mb-4 flex items-center gap-3 rounded-2xl border border-border p-3 text-sm font-medium"
+          className="lift press card-highlight surface-card mb-5 flex items-center gap-3 p-4 text-sm font-semibold"
         >
-          <span className="flex size-9 items-center justify-center rounded-xl bg-primary/12 text-primary">
-            <GitCompareArrows className="size-4" />
+          <span className="gradient-primary flex size-10 shrink-0 items-center justify-center rounded-xl text-primary-foreground">
+            <GitCompareArrows className="size-4" strokeWidth={1.75} />
           </span>
           Compare two plans in detail
         </Link>
@@ -44,12 +44,12 @@ function PlanHistoryPage() {
         <Loader label="Loading plans" />
       ) : plans.length === 0 ? (
         <EmptyState
-          icon={<CalendarRange className="size-5" />}
+          icon={<CalendarRange className="size-5" strokeWidth={1.75} />}
           title="No plans yet"
           description="Generate your first AI weekly plan from the Planner and it will be saved here."
         />
       ) : (
-        <ul className="space-y-3">
+        <ul className="space-y-4">
           {plans.map((row, index) => {
             const plan = planOf(row);
             const previous = planOf(plans[index + 1]);
@@ -57,13 +57,16 @@ function PlanHistoryPage() {
             const open = openId === row.id;
             const diffs = previous ? comparePlans(plan, previous).filter((d) => d.direction !== "same") : [];
             return (
-              <li key={row.id} className="surface-card overflow-hidden">
+              <li key={row.id} className="surface-card lift animate-rise overflow-hidden">
                 <button
                   onClick={() => setOpenId(open ? null : row.id)}
                   className="press flex w-full items-center gap-3 p-4 text-left"
                 >
-                  <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-primary/12 text-primary">
-                    <CalendarRange className="size-5" />
+                  <span className={cn(
+                    "flex size-11 shrink-0 items-center justify-center rounded-2xl",
+                    index === 0 ? "gradient-primary text-primary-foreground" : "bg-primary/12 text-primary",
+                  )}>
+                    <CalendarRange className="size-5" strokeWidth={1.75} />
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className="flex items-center gap-2">
@@ -82,11 +85,11 @@ function PlanHistoryPage() {
                       {planSubjects(plan).length} subjects
                     </span>
                   </span>
-                  <ChevronDown className={cn("size-4 shrink-0 text-muted-foreground transition", open && "rotate-180")} />
+                  <ChevronDown className={cn("size-4 shrink-0 text-muted-foreground transition-transform duration-200", open && "rotate-180")} strokeWidth={1.75} />
                 </button>
 
                 {open ? (
-                  <div className="border-t border-border p-4">
+                  <div className="animate-rise border-t border-border p-4">
                     <p className="text-xs text-muted-foreground">{plan?.summary}</p>
                     <p className="mt-3 text-xs font-semibold text-muted-foreground">Subjects</p>
                     <p className="text-sm">{planSubjects(plan).join(", ") || "—"}</p>
@@ -105,17 +108,17 @@ function PlanHistoryPage() {
                     <p className="mt-4 text-xs font-semibold text-muted-foreground">Study schedule</p>
                     <div className="mt-2 space-y-3">
                       {plan?.days?.map((day) => (
-                        <div key={day.day}>
+                        <div key={day.day} className="rounded-xl bg-muted/50 p-3">
                           <p className="text-sm font-semibold">{day.day}</p>
-                          <ul className="mt-1 space-y-1.5">
+                          <ul className="mt-1.5 space-y-1.5">
                             {day.blocks?.map((b, i) => (
                               <li key={i} className="flex gap-2 text-xs">
-                                <span className="w-16 shrink-0 text-muted-foreground">{b.time}</span>
+                                <span className="w-16 shrink-0 text-muted-foreground tabular-nums">{b.time}</span>
                                 <span className="flex-1">
                                   <span className="font-medium">{b.subject}</span>
                                   <span className="block text-muted-foreground">{b.topic}</span>
                                 </span>
-                                <span className="text-primary">{b.minutes}m</span>
+                                <span className="font-semibold text-primary tabular-nums">{b.minutes}m</span>
                               </li>
                             ))}
                           </ul>
